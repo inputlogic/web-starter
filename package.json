@@ -36,8 +36,9 @@
     "query-string": "5.0.1",
     "redux": "3.7.2",
     "redux-devtools-extension": "2.13.2",
+    "replacer-brunch": "1.0.1",
     "throttle-debounce": "1.0.1",
-    "uglify-js-bruch": "2.10.0",
+    "uglify-js-brunch": "2.10.0",
     "wasmuth": "1.6.0"
   },
   "devDependencies": {
@@ -50,7 +51,8 @@
   },
   "standard": {
     "globals": [
-      "Preact"
+      "Preact",
+      "__ENV__"
     ],
     "ignore": [
       "build"
