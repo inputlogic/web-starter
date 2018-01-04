@@ -1,0 +1,80 @@
+@import (reference) 'variables.less';
+
+form {
+  margin-top: @gutter;
+}
+
+fieldset {
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+  margin: 0;
+
+  &.padding-top {
+    padding-top: @gutter;
+  }
+
+  &.submit button {
+    width: 100%;
+  }
+}
+
+label {
+  display: block;
+  color: @half-black;
+  font-weight: 800;
+  margin-bottom: @gutter / 2; 
+}
+
+input,
+textarea {
+  width: 95.5%;
+  padding: 1em;
+  border: 1px solid @grey;
+  border-radius: @border-radius;
+  margin-bottom: 1em;
+}
+
+.field-hint {
+  font-size: .75em;
+  font-weight: 300;
+  margin: -0.5em 0 3em 0;
+  color: @light-grey;
+
+  &.is-error {
+    color: @red;
+  }
+}
+
+input.fancy-label {
+  position: relative;
+}
+
+.label-wrap {
+  position: relative;
+  margin-top: 1em;
+}
+
+input.fancy-label + label::after {
+  content: " ";
+}
+
+.fancy-label:placeholder-shown + label {
+  color: #999;
+  left: 0.5em;
+  top: -0.5em;
+  font-size: 1em;
+  font-weight: 300;
+}
+
+input.fancy-label:focus + label,
+input.fancy-label + label {
+  position: absolute;
+  top: -3em;
+  left: 0;
+  color: #999;
+  line-height: 60px;
+  pointer-events: none;
+  transition: all 0.25s;
+  font-size: .9em;
+}
