@@ -106,7 +106,7 @@ export const Router = pipe(
 export const urlFor = (name, {args = {}, queries = {}} = {}) => {
   const rule = routes[name]
   if (!rule) {
-    console.warn('No route found for name: '  + name)
+    console.warn('No route found for name: ' + name)
   }
   const replaced = reduce(
     (acc, k) => acc.replace(`:${k}`, args[k]),
