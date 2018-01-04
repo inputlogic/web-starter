@@ -49,5 +49,13 @@ exports.plugins = {
     mangle: false,
     keep_fnames: true,
     compress: false
+  },
+  replacer: {
+    dict: [
+      {
+        key: /__ENV__/g,
+        value: process.env.NODE_ENV || 'development'
+      }
+    ]
   }
 }

@@ -1,6 +1,11 @@
-import {equal} from 'wasmuth'
+import {equal, filter} from 'wasmuth'
+
 import {subscribe, getState} from '/store'
 import {compose, setNodeName} from '/util/compose'
+
+import {DEBUG} from '/settings'
+
+const onlyDupes = (a1, a2) => filter(i => a1.indexOf(i) > -1, a2)
 
 /**
  * Mapper is called whenever the state changes.
@@ -30,7 +35,17 @@ export default (nodeName, mapper) => {
     componentWillUnmount () {
       this.unsubscribe()
     },
-    render ({unsubscribe, _namespacedState, ...props}) {
+    render ({_namespacedState, ...props}) {
+      if (DEBUG) {
+        const dupes = onlyDupes(Object.keys(props), Object.keys(_namespacedState))
+        if (dupes.length) {
+          console.warn(
+`${nodeName} props are being defined twice.
+Avoid, \`...props,\` in mapper.
+${dupes}
+`)
+        }
+      }
       return <Component {...props} {..._namespacedState} />
     }
   })
