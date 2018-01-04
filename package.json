@@ -30,15 +30,15 @@
     "ejs": "2.5.7",
     "email-regex": "^2.0.0",
     "less-brunch": "2.10.0",
-    "preact": "8.2.6",
+    "preact": "8.2.7",
     "preact-portal": "1.1.2",
     "preact-router": "2.6.0",
     "query-string": "5.0.1",
     "redux": "3.7.2",
     "redux-devtools-extension": "2.13.2",
     "throttle-debounce": "1.0.1",
-    "uglify-js-brunch": "2.10.0",
-    "wasmuth": "1.5.0"
+    "uglify-js-bruch": "2.10.0",
+    "wasmuth": "1.6.0"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.2",

@@ -45,11 +45,13 @@ export function pathReducer (state, action) {
       const parent = pathGet(path.slice(0, -1), state)
       const parentType = toType(parent)
       if (parentType === 'object') {
-        return pathSet(
-          path.slice(0, -1),
-          without(path.slice(-1), parent),
-          state
-        )
+        return path.length > 1
+          ? pathSet(
+            path.slice(0, -1),
+            without(path.slice(-1), parent),
+            state
+          )
+          : without(path, state)
       } else if (parentType === 'array') {
         const idx = last(path)
         if (toType(idx) === 'number') {
