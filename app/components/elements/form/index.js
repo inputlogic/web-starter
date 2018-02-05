@@ -7,7 +7,7 @@ import {
   update,
   dispatch,
   getState,
-  mapStateToProps
+  withState
 } from '/store'
 
 const {cloneElement} = Preact
@@ -109,11 +109,10 @@ export const Field = ({
       <div className='field-hint is-error'>{error}</div>}
   </div>
 
-export const TextField = mapStateToProps('TextField',
-  ({forms = {}, formErrors = {}}, props) => ({
-    ...props,
-    value: path([props.formName, props.name], forms),
-    error: path([props.formName, props.name], formErrors)
+export const TextField = withState('TextField',
+  ({forms = {}, formErrors = {}}, {name, formName}) => ({
+    value: path([formName, name], forms),
+    error: path([formName, name], formErrors)
   })
 )(({
   type = 'text',
@@ -146,10 +145,9 @@ export const TextField = mapStateToProps('TextField',
   </Field>
 )
 
-export const Checkbox = mapStateToProps('Checkbox',
-  ({forms = {}}, props) => ({
-    ...props,
-    checked: pathOr(false, [props.formName, props.name], forms)
+export const Checkbox = withState('Checkbox',
+  ({forms = {}}, {formName, name}) => ({
+    checked: pathOr(false, [formName, name], forms)
   })
 )(({
   name,
@@ -190,12 +188,11 @@ export const RadioField = ({name, label, value, checked, formName, ...props}) =>
     />
   </Field>
 
-export const SubmitButton = mapStateToProps('SubmitButton',
-  ({forms = {}, formErrors = {}, formState = {}}, props) => ({
-    ...props,
-    isDirty: some(x => x, forms[props.formName] || {}),
-    isSubmitting: pathOr(false, [props.formName, 'submitting'], formState),
-    hasError: some(x => x, formErrors[props.formName] || {})
+export const SubmitButton = withState('SubmitButton',
+  ({forms = {}, formErrors = {}, formState = {}}, {formName}) => ({
+    isDirty: some(x => x, forms[formName] || {}),
+    isSubmitting: pathOr(false, [formName, 'submitting'], formState),
+    hasError: some(x => x, formErrors[formName] || {})
   })
 )(({
   isDirty,

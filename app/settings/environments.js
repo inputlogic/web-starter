@@ -4,7 +4,7 @@ import check from 'check-arg-types'
 const toType = check.prototype.toType
 
 const environments = {
-  development: ['localhost:3333', 'localhost:3334'],
+  development: ['localhost:5000'],
   staging: '[STAGING_URL]',
   production: '[PRODUCTION_URL]'
 }

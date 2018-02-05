@@ -3,7 +3,7 @@ import {watchStore} from 'wasmuth'
 import {composeWithDevTools} from 'redux-devtools-extension'
 
 import {pathReducer, actions} from '/util/pathReducer'
-export withState from '/util/withState'
+export {withState} from '/util/withState'
 
 const initialState = {
   url: window.location.pathname,

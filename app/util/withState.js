@@ -16,7 +16,7 @@ const onlyDupes = (a1, a2) => filter(i => a1.indexOf(i) > -1, a2)
  *
  * @TODO: Eventually move this to wasmuth
  */
-export default (nodeName, mapper) => {
+export const withState = (nodeName, mapper) => {
   if (!mapper) {
     mapper = nodeName
     nodeName = 'Mapper'
@@ -50,3 +50,5 @@ ${dupes}
     }
   })
 }
+
+export default withState

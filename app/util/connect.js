@@ -1,6 +1,6 @@
 import {pipe} from 'wasmuth'
 import {getState} from '/store'
-import withState from '/util/mapStateToProps'
+import withState from '/util/withState'
 import withRequest from '/util/withRequest'
 
 export const connect = mapper => props => {

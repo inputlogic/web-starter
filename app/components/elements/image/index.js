@@ -1,9 +1,9 @@
 import {pick, find, map} from 'wasmuth'
 import {dispatch, set} from '/store'
-import mapStateToProps from '/util/mapStateToProps'
+import withState from '/util/withState'
 import Base from './base'
 
-export const Image = mapStateToProps(
+export const Image = withState(
   ({loadedImages = {}}, {images}) => ({
     loadedImages: pick(map(i => i.url, images), loadedImages)
   })
