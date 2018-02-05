@@ -2,11 +2,8 @@ import {createStore} from 'redux'
 import {watchStore} from 'wasmuth'
 import {composeWithDevTools} from 'redux-devtools-extension'
 
-import {
-  pathReducer,
-  actions
-} from '/util/pathReducer'
-import mapStateToPropsUtil from '/util/mapStateToProps'
+import {pathReducer, actions} from '/util/pathReducer'
+export withState from '/util/withState'
 
 const initialState = {
   url: window.location.pathname,
@@ -26,5 +23,4 @@ export const set = actions.set
 export const update = actions.update
 export const remove = actions.remove
 export const watchPath = watchStore(store)
-export const mapStateToProps = mapStateToPropsUtil
 export default store
