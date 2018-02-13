@@ -39,6 +39,8 @@ export const Route = compose(setNodeName('Route'), {
     }
     if (!equal(currentValues, newValues)) {
       dispatch(set('route', newValues))
+      dispatch(set('mobileMenuOpen', false))
+      dispatch(set('dropdowns', {}))
     }
   },
   componentWillMount () {
@@ -46,6 +48,16 @@ export const Route = compose(setNodeName('Route'), {
   },
   componentWillUpdate (newProps) {
     this.updateState(newProps)
+  },
+  componentDidUpdate () {
+    const {hash} = window.location
+    if (hash !== '') {
+      window.requestAnimationFrame(() => {
+        const id = hash.replace('#', '')
+        const element = document.getElementById(id)
+        element && element.scrollIntoView()
+      })
+    }
   },
   render ({name, isAuthed, matches, component: Component}) {
     if (toType(isAuthed) === 'function') {
@@ -59,12 +71,14 @@ export const Route = compose(setNodeName('Route'), {
     }
     const type = toType(Component)
     if (type === 'function') {
+      window.requestAnimationFrame(() => window.scrollTo(0, 0))
       return <Component />
     } else if (type === 'object') {
       const paths = toPairs(matches)
       const match = find(p => path(p, Component), paths)
       if (match) {
         const Match = path(match, Component)
+        window.requestAnimationFrame(() => window.scrollTo(0, 0))
         return <Match />
       }
     }

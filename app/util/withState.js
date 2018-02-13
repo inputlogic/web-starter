@@ -1,9 +1,13 @@
+import check from 'check-arg-types'
 import {equal, filter} from 'wasmuth'
 
-import {subscribe, getState} from '/store'
 import {compose, setNodeName} from '/util/compose'
+import deepClone from '/util/deepClone'
 
+import {subscribe, getState} from '/store'
 import {DEBUG} from '/settings'
+
+const toType = check.prototype.toType
 
 const onlyDupes = (a1, a2) => filter(i => a1.indexOf(i) > -1, a2)
 
@@ -26,7 +30,7 @@ export default (nodeName, mapper) => {
       const syncState = () => {
         const newProps = mapper(getState(), this.props)
         if (!equal(newProps, this.state._namespacedState)) {
-          this.setState({_namespacedState: newProps})
+          this.setState({_namespacedState: deepClone(newProps)})
         }
       }
       syncState()
@@ -40,10 +44,22 @@ export default (nodeName, mapper) => {
         const dupes = onlyDupes(Object.keys(props), Object.keys(_namespacedState))
         if (dupes.length) {
           console.warn(
-`${nodeName} props are being defined twice.
-Avoid, \`...props,\` in mapper.
-${dupes}
-`)
+            `${nodeName} props are being defined twice.
+            Avoid, \`...props,\` in mapper.
+            ${dupes}`
+          )
+        }
+        // Uncomment this to see a lot of warnings
+        const funcs = Object.keys(filter(v => toType(v) === 'function', _namespacedState))
+        if (funcs.length) {
+          console.warn(
+            `${nodeName} withState mapper returns an object with functions.
+            You should rather only return values needed from state in this object.
+            Build the functions in the component that receives withState
+            props.
+            [${funcs.join(', ')}]
+            `
+          )
         }
       }
       return <Component {...props} {..._namespacedState} />

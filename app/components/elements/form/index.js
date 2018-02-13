@@ -1,13 +1,13 @@
 import emailRegex from 'email-regex'
-import {debounce as debounceFunction} from 'throttle-debounce'
-import {path, pathOr, some} from 'wasmuth'
+import {path, pathOr, some, filter} from 'wasmuth'
+import {throttle as debounceFunction} from 'throttle-debounce'
 
 import {
+  dispatch,
   set,
   update,
-  dispatch,
   getState,
-  mapStateToProps
+  withState
 } from '/store'
 
 const {cloneElement} = Preact
@@ -16,6 +16,18 @@ const validateEmail = (formName, field = 'email') => debounceFunction(200, (emai
   if (email.length < 4) return
   if (!emailRegex({exact: true}).test(email)) {
     dispatch(set(['formErrors', formName, field], 'Please enter a valid Email Address'))
+  } else {
+    dispatch(set(['formErrors', formName, field], null))
+  }
+})
+
+const validatePhone = (formName, field = 'phone') => debounceFunction(200, (phone) => {
+  const phoneRe = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
+  if (!phoneRe.test(phone)) {
+    dispatch(set(
+      ['formErrors', formName, field],
+      'Please enter a valid phone (e.g. 18005551234)'
+    ))
   } else {
     dispatch(set(['formErrors', formName, field], null))
   }
@@ -31,15 +43,16 @@ const validatePassword = (formName, field = 'password') => debounceFunction(200,
 
 const handleValidations = (formName, name, type, rules, value) =>
   (type === 'email' && validateEmail(formName, name)(value)) ||
+  (type === 'tel' && validatePhone(formName, name)(value)) ||
   (type === 'password' && rules.min && validatePassword(formName, name)(value, rules))
 
 const updateProps = (children, {formName}) => {
-  const names = ['TextField', 'RadioField', 'Radio', 'SubmitButton']
+  const names = ['TextField', 'RadioField', 'Radio', 'Checkbox', 'SubmitButton', 'Select', 'TextArea']
   for (var x = 0; x < children.length; x++) {
-    if (children[x].nodeName && names.indexOf(children[x].nodeName.name) > -1) {
+    if (children[x] && children[x].nodeName && names.indexOf(children[x].nodeName.name) > -1) {
       children[x] = cloneElement(children[x], {formName})
     }
-    if (children[x].children && children[x].children.length) {
+    if (children[x] && children[x].children && children[x].children.length) {
       children[x].children = updateProps(children[x].children, {formName})
     }
   }
@@ -58,16 +71,21 @@ export const Form = ({
     dispatch(update(['formState', name], {submitting: true}))
     const {forms = {}, formErrors = {}} = getState()
     const data = forms[name]
-    const errors = formErrors[name]
-    const resp = onSubmit({data, errors})
+    const errors = filter((k, v) => v, formErrors[name] || {})
+    const resp = onSubmit({data, errors, name})
     if (!resp || !resp.then) {
       console.warn(
         `onSubmit for Form "${name}" does not return a Promise!
         You may need to set \`{submitting: false}\` manually.`
       )
     } else {
-      resp.then(() =>
-        dispatch(update(['formState', name], {submitting: false})))
+      resp
+        .then(() =>
+          dispatch(update(['formState', name], {submitting: false})))
+        .catch(err => {
+          dispatch(update(['formState', name], {submitting: false}))
+          dispatch(update(['formErrors', name], err))
+        })
     }
   }
   return (
@@ -86,7 +104,7 @@ export const Field = ({
   children,
   ...props
 }) =>
-  <div>
+  <div className='form-row'>
     {className.indexOf('fancy-label') !== -1 &&
       <div className='label-wrap'>
         {children}
@@ -96,7 +114,7 @@ export const Field = ({
       </div>}
 
     {className.indexOf('fancy-label') === -1 &&
-      <div>
+      <div className='form-row'>
         {label && <label htmlFor={name}>
           <div>{label}</div>
         </label>}
@@ -109,11 +127,80 @@ export const Field = ({
       <div className='field-hint is-error'>{error}</div>}
   </div>
 
-export const TextField = mapStateToProps('TextField',
-  ({forms = {}, formErrors = {}}, props) => ({
-    ...props,
-    value: path([props.formName, props.name], forms),
-    error: path([props.formName, props.name], formErrors)
+export const FormHeading = ({className, children}) =>
+  <div class={className + ' form-heading'}>{children}</div>
+
+export const FieldSet = ({className, children}) =>
+  <fieldset class={className || ''}>{children}</fieldset>
+
+export const Select = withState(
+  'Select',
+  ({forms = {}, formErrors = {}}, {formName, name}) => ({
+    value: path([formName, name], forms)
+  })
+)(({
+  name,
+  label,
+  className = '',
+  children,
+  formName,
+  value,
+  ...props
+}) =>
+  <div className='form-row'>
+    <label>{label}</label>
+    <div class={className + ' select'}>
+      <select
+        name={name}
+        value={value}
+        onChange={({target}) => {
+          dispatch(update(
+            ['forms', formName],
+            {[name]: target[target.selectedIndex].value}
+          ))
+        }}
+        {...props}
+      >
+        {children}
+      </select>
+    </div>
+  </div>
+)
+
+export const TextArea = withState(
+  'TextArea',
+  ({forms = {}}, {formName, name}) => ({
+    value: path([formName, name], forms)
+  })
+)(({
+  label,
+  name,
+  rows,
+  value,
+  formName,
+  debounce,
+  placeholder = ''
+}) =>
+  <div className='form-row'>
+    <label>{label}</label>
+    <textarea
+      rows={rows}
+      placeholder={placeholder}
+      name={name}
+      value={value}
+      onInput={debounceFunction(debounce, (ev) =>
+        ev.preventDefault() ||
+        dispatch(update(['forms', formName], {[name]: ev.target.value}))
+      )}
+    />
+  </div>
+)
+
+export const TextField = withState(
+  'TextField',
+  ({forms = {}, formErrors = {}}, {formName, name}) => ({
+    value: path([formName, name], forms),
+    error: path([formName, name], formErrors)
   })
 )(({
   type = 'text',
@@ -131,11 +218,12 @@ export const TextField = mapStateToProps('TextField',
     <input
       type={type}
       name={name}
+      id={name}
       placeholder={placeholder}
+      value={value}
       onInput={debounceFunction(debounce, (ev) =>
         ev.preventDefault() ||
         handleValidations(formName, name, type, rules, ev.target.value) ||
-        console.log('???', formName, name, value, ev.target.value) ||
         dispatch(update(['forms', formName], {[name]: ev.target.value}))
       )}
       // setTimeout is needed to wait till after the animation
@@ -146,20 +234,22 @@ export const TextField = mapStateToProps('TextField',
   </Field>
 )
 
-export const Checkbox = mapStateToProps('Checkbox',
-  ({forms = {}}, props) => ({
-    ...props,
-    checked: pathOr(false, [props.formName, props.name], forms)
+export const Checkbox = withState('Checkbox',
+  ({forms = {}}, {formName, name}) => ({
+    checked: pathOr(false, [formName, name], forms)
   })
 )(({
   name,
   formName,
   checked,
-  label,
+  isLabelOuter,
+  children,
+  className = 'checkbox',
   ...props
-}) =>
-  <div className='label-wrap'>
+}) => {
+  const input = (
     <input
+      className={className}
       type='checkbox'
       id={name}
       name={name}
@@ -168,13 +258,20 @@ export const Checkbox = mapStateToProps('Checkbox',
         ev.preventDefault() ||
         dispatch(update(['forms', formName], {[name]: ev.target.checked}))
       }
-      {...props}
     />
-    {label && <label htmlFor={name}>
-      <div>{label}</div>
-    </label>}
-  </div>
-)
+  )
+  return isLabelOuter
+    ? <label>
+      {input}
+      {children}
+    </label>
+    : <div className='no-label-check'>
+      {input}
+      <label for={name}>
+        {children}
+      </label>
+    </div>
+})
 
 export const RadioField = ({name, label, value, checked, formName, ...props}) =>
   <Field label={name} name={name} {...props}>
@@ -190,14 +287,14 @@ export const RadioField = ({name, label, value, checked, formName, ...props}) =>
     />
   </Field>
 
-export const SubmitButton = mapStateToProps('SubmitButton',
-  ({forms = {}, formErrors = {}, formState = {}}, props) => ({
-    ...props,
-    isDirty: some(x => x, forms[props.formName] || {}),
-    isSubmitting: pathOr(false, [props.formName, 'submitting'], formState),
-    hasError: some(x => x, formErrors[props.formName] || {})
+export const SubmitButton = withState('SubmitButton',
+  ({forms = {}, formErrors = {}, formState = {}}, {formName}) => ({
+    isDirty: some(x => x, forms[formName] || {}),
+    isSubmitting: pathOr(false, [formName, 'submitting'], formState),
+    hasError: some(x => x, formErrors[formName] || {})
   })
 )(({
+  disabled,
   isDirty,
   isSubmitting,
   hasError,
@@ -205,8 +302,8 @@ export const SubmitButton = mapStateToProps('SubmitButton',
   Loading = () => <span>Loading...</span>,
   children
 }) => {
-  const disabled = !isDirty || hasError || isSubmitting
-  return <button type='submit' className={className} disabled={disabled}>
+  const isDisabled = disabled || (!isDirty || isSubmitting)
+  return <button type='submit' className={className} disabled={isDisabled}>
     {isSubmitting
       ? <Loading />
       : children}

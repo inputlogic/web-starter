@@ -4,7 +4,7 @@ import {
   set,
   dispatch,
   getState,
-  mapStateToProps
+  withState
 } from '/store'
 
 import BaseDropdown from './base'
@@ -32,18 +32,22 @@ document.body.addEventListener('click', (ev) => {
   dispatch(set(['dropdowns'], {}))
 })
 
-export default mapStateToProps(
-  ({dropdowns}, {uid, ...props}) => {
+export default withState(
+  ({dropdowns}, {uid}) => {
     if (!uid) {
       console.warn('<Dropdown> must include a uid prop.')
     }
     return {
-      uid,
       isOpen: !!dropdowns[uid],
-      handleClick: (ev) =>
-        ev.preventDefault() ||
-        dispatch(set(['dropdowns', uid], !dropdowns[uid])),
-      ...props
+      dropdowns
     }
   }
-)(BaseDropdown)
+)(({isOpen, dropdowns, uid, ...props}) =>
+  BaseDropdown({
+    ...props,
+    isOpen,
+    handleClick: (ev) =>
+      ev.preventDefault() ||
+      dispatch(set(['dropdowns', uid], !dropdowns[uid]))
+  })
+)

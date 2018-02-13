@@ -19,7 +19,7 @@ function BaseDropdown ({
       ? <button className='btn btn-dropdown black-ghost-btn' onClick={handleClick}>
         <Level noPadding>{buttonText} <DownArrow /></Level>
       </button>
-      : <Trigger className='btn btn-dropdown' onClick={handleClick} />}
+      : <Trigger className='btn-dropdown' onClick={handleClick} />}
     {noWrapper
       ? isOpen && children
       : <div className={cls}>

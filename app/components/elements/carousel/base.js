@@ -1,5 +1,7 @@
 import {map} from 'wasmuth'
 
+import Link from '/components/elements/link'
+
 export default function render ({
   active,
   prev,
@@ -7,12 +9,13 @@ export default function render ({
   className = 'carousel-slide',
   getRef,
   getStyle,
+  wrapperClass,
   children
 }) {
-  return <div className='carousel-block carousel'>
+  return <div className={`carousel-block carousel ${wrapperClass}`}>
     <div className='card-carousel-content row'>
-      <nav>
-        <a onClick={prev} href='#' className='carousel-btn left'>&nbsp;</a>
+      <nav className='nav prev'>
+        <Link to={prev} />
       </nav>
       <div className='slides'>
         {map((c, idx) =>
@@ -23,8 +26,8 @@ export default function render ({
           >{c}</div>
         , children)}
       </div>
-      <nav>
-        <a onClick={next} href='#' className='carousel-btn right'>&nbsp;</a>
+      <nav className='nav next'>
+        <Link to={next} />
       </nav>
     </div>
   </div>

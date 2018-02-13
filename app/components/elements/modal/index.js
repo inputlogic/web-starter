@@ -1,4 +1,4 @@
-import {dispatch, watchPath, getState} from '/store'
+import {dispatch, set, watchPath} from '/store'
 import {closeModal} from './actions'
 import BaseModal from './base'
 
@@ -12,18 +12,28 @@ watchPath(['modal'], (modal, oldmodal) => {
   }
 })
 
-const isOverlay = (el) =>
-  (el.classList && el.classList.contains('modal-container'))
-
-document.body.addEventListener('click', (ev) => {
-  const modal = getState().modal
-  if (modal && isOverlay(ev.target)) {
-    dispatch(closeModal())
+// Watch for URL change, if so close all modals.
+watchPath(['route'], (route, oldRoute = {}) => {
+  if (route.name && oldRoute.name && route.name !== oldRoute.name) {
+    dispatch(set('modal', null))
   }
 })
 
+const isOverlay = (el) =>
+  (el.classList && el.classList.contains('modal-container'))
+
 export default props => BaseModal({
   className: '',
-  dispatchCloseModal: () => dispatch(closeModal()),
+  handleModalContainerClick: ev => {
+    if (isOverlay(ev.target)) {
+      props.onClose
+        ? props.onClose()
+        : dispatch(closeModal())
+    }
+  },
+  dispatchCloseModal: () =>
+    props.onClose
+      ? props.onClose()
+      : dispatch(closeModal()),
   ...props
 })

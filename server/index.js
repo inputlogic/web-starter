@@ -6,7 +6,7 @@ const path = require('path')
 const ejs = require('ejs')
 const queryString = require('query-string')
 
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 5000
 const indexFile = './public/index.html'
 
 const renderIndex = (data, response) =>
@@ -19,7 +19,10 @@ http.createServer((request, response) => {
   const search = url.parse(request.url).search
   const parsed = queryString.parse(search)
 
-  let filePath = './public' + request.url
+  // Remove the query to prevent query strings from breaking request.
+  // This means devs working on css don't need to reload the page
+  // after changing less file.
+  let filePath = './public' + request.url.split('?')[0]
   if (filePath === './public/') {
     filePath = indexFile
   }
@@ -36,7 +39,7 @@ http.createServer((request, response) => {
     '.wav': 'audio/wav',
     '.mp4': 'video/mp4',
     '.woff': 'application/font-woff',
-    '.ttf': 'application/font-ttf',
+    '.ttf': 'application/x-font-ttf',
     '.eot': 'application/vnd.ms-fontobject',
     '.otf': 'application/font-otf',
     '.svg': 'image/svg+xml'

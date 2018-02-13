@@ -1,17 +1,13 @@
-import {Router} from '/util/route'
-
-import Header from '/components/elements/header'
+import PageNotification from '/components/elements/page-notification'
 import Modals from '/components/modals'
+
+import {Router} from '/util/route'
 
 import routes from '/routes'
 
-import {subscribe, getState} from '/store'
-
-subscribe(() => console.log('state', getState()))
-
 const Main = () =>
-  <div>
-    <Header />
+  <div className='wrap'>
+    <PageNotification />
     <Router routes={routes} />
     <Modals />
   </div>

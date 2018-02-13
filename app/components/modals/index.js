@@ -1,11 +1,11 @@
-import {mapStateToProps} from '/store'
+import {withState} from '/store'
 import Example from './example'
 
 const MODALS = {
   Example
 }
 
-export default mapStateToProps(
+export default withState(
   (state) => ({modal: state.modal})
 )(({modal}) => {
   const Modal = MODALS[modal]
