@@ -1,7 +1,6 @@
 import check from 'check-arg-types'
 import toCamelCase from 'to-camel-case'
 import toSnakeCase from 'to-snake-case'
-import queryString from 'query-string'
 import {
   request,
   pipe,
@@ -11,7 +10,7 @@ import {
 } from 'wasmuth'
 
 import {dispatch, set} from '/store'
-import {API_URL, IG_REDIRECT_URL} from '/settings'
+import {API_URL} from '/settings'
 
 const toType = check.prototype.toType
 
@@ -129,6 +128,15 @@ export function remove (endpoint, opts = {}) {
 }
 
 // Private functions
+
+function makeExternalRequest (url, opts = {}) {
+  const {method, data: body} = opts
+  return new Promise((resolve, reject) =>
+    window.fetch(url, {method, body})
+      .then(res => resolve(res))
+      .catch(e => console.error(e) || reject(e))
+  )
+}
 
 function makeRequest (endpoint, opts = {}) {
   if (opts.mapResponse === undefined) opts.mapResponse = true
