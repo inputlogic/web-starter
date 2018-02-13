@@ -1,7 +1,6 @@
 import emailRegex from 'email-regex'
 import {path, pathOr, some, filter} from 'wasmuth'
 import {throttle as debounceFunction} from 'throttle-debounce'
-import ReactDatePicker from 'react-basic-datepicker'
 
 import {
   dispatch,
@@ -48,7 +47,7 @@ const handleValidations = (formName, name, type, rules, value) =>
   (type === 'password' && rules.min && validatePassword(formName, name)(value, rules))
 
 const updateProps = (children, {formName}) => {
-  const names = ['TextField', 'RadioField', 'Radio', 'Checkbox', 'SubmitButton', 'Select', 'TextArea', 'DatePicker']
+  const names = ['TextField', 'RadioField', 'Radio', 'Checkbox', 'SubmitButton', 'Select', 'TextArea']
   for (var x = 0; x < children.length; x++) {
     if (children[x] && children[x].nodeName && names.indexOf(children[x].nodeName.name) > -1) {
       children[x] = cloneElement(children[x], {formName})
@@ -310,23 +309,3 @@ export const SubmitButton = mapStateToProps('SubmitButton',
       : children}
   </button>
 })
-
-export const DatePicker = mapStateToProps('DatePicker',
-  ({forms = {}}, {formName, name}) => ({
-    startDate: pathOr('', [formName, name], forms)
-  })
-)(({
-  name,
-  formName,
-  startDate,
-  dateFormatter = (d) => d,
-  ...props
-}) =>
-  startDate
-   ? <ReactDatePicker
-     {...props}
-     startDate={startDate}
-     handleDateChange={d => dispatch(update(['forms', formName], {[name]: dateFormatter(d)}))}
-    />
-  : null
-)
