@@ -14,12 +14,6 @@ function init () {
   )
 }
 
-function componentDidMount () {
-  window.requestAnimationFrame(() =>
-    this.setState({...this.state, width: this.ref.offsetWidth})
-  )
-}
-
 function next (ev) {
   ev.preventDefault()
   const n = this.state.active >= this.props.children.length - 1
@@ -37,8 +31,11 @@ function prev (ev) {
 }
 
 function getRef (ref) {
-  if (!ref) return
+  if (!ref || this.ref) return
   this.ref = ref
+  window.requestAnimationFrame(() =>
+    this.setState({...this.state, width: this.ref.offsetWidth})
+  )
 }
 
 function getStyle (idx, active) {
@@ -51,7 +48,6 @@ function getStyle (idx, active) {
 
 export default compose(setNodeName('Carousel'), {
   init,
-  componentDidMount,
   next,
   prev,
   getRef,

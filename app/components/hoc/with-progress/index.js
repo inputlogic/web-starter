@@ -1,5 +1,5 @@
 import {path} from 'wasmuth'
-import mapStateToProps from '/util/mapStateToProps'
+import withState from '/util/withState'
 
 /**
  * Pass the progress of `request` as a prop named `propName`.
@@ -7,7 +7,7 @@ import mapStateToProps from '/util/mapStateToProps'
  * Progress is a float from 0 - 100 if progress is available, null otherwise.
  */
 export default (request, {propName = 'progress'} = {}) =>
-  mapStateToProps((state, props) => {
+  withState((state, props) => {
     const {loaded, total} = path(['requests', request, 'progress'], state) || {}
     return {
       [propName]: typeof loaded === 'undefined' ? null : loaded / total

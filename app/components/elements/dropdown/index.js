@@ -33,17 +33,21 @@ document.body.addEventListener('click', (ev) => {
 })
 
 export default mapStateToProps(
-  ({dropdowns}, {uid, ...props}) => {
+  ({dropdowns}, {uid}) => {
     if (!uid) {
       console.warn('<Dropdown> must include a uid prop.')
     }
     return {
-      uid,
       isOpen: !!dropdowns[uid],
-      handleClick: (ev) =>
-        ev.preventDefault() ||
-        dispatch(set(['dropdowns', uid], !dropdowns[uid])),
-      ...props
+      dropdowns
     }
   }
-)(BaseDropdown)
+)(({isOpen, dropdowns, uid, ...props}) =>
+  BaseDropdown({
+    ...props,
+    isOpen,
+    handleClick: (ev) =>
+      ev.preventDefault() ||
+      dispatch(set(['dropdowns', uid], !dropdowns[uid]))
+  })
+)
