@@ -26,7 +26,7 @@ import {path} from 'wasmuth'
 import {route as preactRoute} from 'preact-router'
 import {urlFor} from '/util/route'
 import {updateQuery} from '/util/updateQuery'
-import {mapStateToProps} from '/store'
+import {withState} from '/store'
 import Base from './base'
 
 const paginationRange = (current, numPages, delta = 1) => {
@@ -81,7 +81,7 @@ const paginationRange = (current, numPages, delta = 1) => {
   return rangeWithDots
 }
 
-export const Pagination = mapStateToProps(
+export const Pagination = withState(
   ({requests = {}, route = {}}, {url}) => ({
     request: path([url, 'result'], requests),
     route

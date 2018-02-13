@@ -7,7 +7,7 @@ import {
   set,
   update,
   getState,
-  mapStateToProps
+  withState
 } from '/store'
 
 const {cloneElement} = Preact
@@ -133,7 +133,7 @@ export const FormHeading = ({className, children}) =>
 export const FieldSet = ({className, children}) =>
   <fieldset class={className || ''}>{children}</fieldset>
 
-export const Select = mapStateToProps(
+export const Select = withState(
   'Select',
   ({forms = {}, formErrors = {}}, {formName, name}) => ({
     value: path([formName, name], forms)
@@ -167,7 +167,7 @@ export const Select = mapStateToProps(
   </div>
 )
 
-export const TextArea = mapStateToProps(
+export const TextArea = withState(
   'TextArea',
   ({forms = {}}, {formName, name}) => ({
     value: path([formName, name], forms)
@@ -196,7 +196,7 @@ export const TextArea = mapStateToProps(
   </div>
 )
 
-export const TextField = mapStateToProps(
+export const TextField = withState(
   'TextField',
   ({forms = {}, formErrors = {}}, {formName, name}) => ({
     value: path([formName, name], forms),
@@ -234,7 +234,7 @@ export const TextField = mapStateToProps(
   </Field>
 )
 
-export const Checkbox = mapStateToProps('Checkbox',
+export const Checkbox = withState('Checkbox',
   ({forms = {}}, {formName, name}) => ({
     checked: pathOr(false, [formName, name], forms)
   })
@@ -287,7 +287,7 @@ export const RadioField = ({name, label, value, checked, formName, ...props}) =>
     />
   </Field>
 
-export const SubmitButton = mapStateToProps('SubmitButton',
+export const SubmitButton = withState('SubmitButton',
   ({forms = {}, formErrors = {}, formState = {}}, {formName}) => ({
     isDirty: some(x => x, forms[formName] || {}),
     isSubmitting: pathOr(false, [formName, 'submitting'], formState),
