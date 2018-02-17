@@ -6,12 +6,12 @@ import compose from '/util/compose'
 export const invalidate = url =>
   dispatch(update(['invalidatedRequests'], {[url]: true}))
 
-export const withRequest = mapper => Component => compose({
+export const withRequests = mapper => Component => compose({
   componentWillMount () {
     const syncState = () => {
       const requests = mapper(getState(), this.props)
       const changedRequests = this._requests
-        ? diff(this._requests, requests, getState().invalidatedRequests)
+        ? diff(this._requests, requests, getState().invalidatedRequests || {})
         : requests
 
       this._requests = requests
@@ -42,7 +42,7 @@ export const withRequest = mapper => Component => compose({
   }
 })
 
-export default withRequest
+export default withRequests
 
 const performRequests = requests =>
   map(
