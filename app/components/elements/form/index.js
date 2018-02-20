@@ -1,5 +1,4 @@
-import emailRegex from 'email-regex'
-import {path, pathOr, some, filter} from 'wasmuth'
+import {path, pathOr, some, filter, isEmail} from 'wasmuth'
 import {throttle as debounceFunction} from 'throttle-debounce'
 
 import {
@@ -14,7 +13,7 @@ const {cloneElement} = Preact
 
 const validateEmail = (formName, field = 'email') => debounceFunction(200, (email) => {
   if (email.length < 4) return
-  if (!emailRegex({exact: true}).test(email)) {
+  if (!isEmail(email)) {
     dispatch(set(['formErrors', formName, field], 'Please enter a valid Email Address'))
   } else {
     dispatch(set(['formErrors', formName, field], null))
