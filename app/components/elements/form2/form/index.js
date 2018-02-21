@@ -22,8 +22,8 @@ export const Form = compose({
         ev.preventDefault()
         const data = path(['forms', name], getState())
         const errors = validate(data, validations)
+        dispatch(set(['formErrors', name], errors))
         if (some(x => x, Object.values(errors))) {
-          dispatch(set(['formErrors', name], errors))
           return
         }
         dispatch(set(['formState', name, 'submitting'], true))
