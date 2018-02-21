@@ -1,4 +1,4 @@
-import {SubmitButton, Input, Form, Field} from '/components/elements/form2'
+import {Select, SubmitButton, Input, Form, Field} from '/components/elements/form2'
 
 export const ExampleForm = ({formProps}) =>
   <div>
@@ -35,6 +35,12 @@ export const ExampleForm = ({formProps}) =>
       </Field>
       <Field fancy>
         <Input name='number' type='number' />
+      </Field>
+      <Field>
+        <Select name='options' >
+          <option value='1'>Option 1</option>
+          <option value='2'>Option 2</option>
+        </Select>
       </Field>
       <SubmitButton>submit</SubmitButton>
     </Form>
