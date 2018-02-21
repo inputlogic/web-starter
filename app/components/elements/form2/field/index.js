@@ -4,16 +4,15 @@ import Base, {FancyField as FancyBase} from './base'
 
 const {cloneElement} = Preact
 
-export const Field = ({children, label, hint}) => {
+export const Field = ({fancy, children, label, hint}) => {
   const Child = children[0]
   const {formName, name, value, className} = Child.attributes
-  const isFancy = (className || '').indexOf('fancy-label') !== -1
   const id = filter(x => x, [formName, name, value]).join('-')
-  const BaseComponent = isFancy ? FancyBase : Base
+  const BaseComponent = fancy ? FancyBase : Base
   return BaseComponent({
     children: cloneElement(Child, {
       id,
-      ...isFancy && {placeholder: ' '}
+      ...fancy && {placeholder: ' ', className: 'fancy-label ' + className}
     }),
     label: label || value || name,
     hint,
