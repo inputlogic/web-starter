@@ -9,8 +9,8 @@ export const ExampleForm = ({formProps}) =>
       <Field fancy>
         <Input name='name2' trackOnInput trackFocus />
       </Field>
-      <Field fancy>
-        <Input name='email' type='email' />
+      <Field fancy >
+        <Input name='email' type='email' focus />
       </Field>
       <Field fancy>
         <Input name='password' type='password' />

@@ -1,4 +1,5 @@
 import {path, filter} from 'wasmuth'
+import compose from '/util/compose'
 import withState from '/util/withState'
 import {getState, dispatch, set} from '/store'
 import Base from './base'
@@ -18,49 +19,64 @@ import Base from './base'
 export const Input = withState(
   'Input',
   ({forms = {}}, {formName, name}) => ({stateValue: path([formName, name], forms)})
-)(({
-  name,
-  formName,
-  type = 'text',
-  trackFocus = false,
-  trackOnInput = false,
-  value,
-  stateValue,
-  ...props
-}) => {
-  !formName && console.warn('Formname not set for Input', name)
-  type === 'checkbox' && !value && console.warn('Value not set for checkbox', name)
-  type === 'radio' && !value && console.warn('Value not set for radio', name)
-  return Base({
-    onChange: ev => {
-      ev.preventDefault()
-      if (type === 'checkbox') {
-        dispatch(set(
-          ['forms', formName, name],
-          addOrRemove(formName, name, value)
-        ))
-      } else if (type === 'radio' || !trackOnInput) {
-        dispatch(set(['forms', formName, name], ev.target.value))
+)(compose({
+  componentWillMount () {
+    this.setFocus = (() => {
+      var done = false
+      return (ref) => {
+        if (done) return
+        done = true
+        ref.focus()
       }
-    },
-    onInput: ev => {
-      if (trackOnInput) {
-        dispatch(set(['forms', formName, name], ev.target.value))
-      }
-    },
-    onFocus: ev => {
-      trackFocus && dispatch(set(['formState', formName, 'focus', name], true))
-    },
-    onBlur: ev => {
-      trackFocus && dispatch(set(['formState', formName, 'focus', name], false))
-    },
-    type,
+    })()
+  },
+  render ({
     name,
-    value: ['checkbox', 'radio'].indexOf(type) > -1 ? value : stateValue,
-    checked: isChecked(type, value, stateValue),
+    formName,
+    type = 'text',
+    trackFocus = false,
+    trackOnInput = false,
+    value,
+    stateValue,
+    focus,
+    setFocus,
     ...props
-  })
-})
+  }) {
+    !formName && console.warn('Formname not set for Input', name)
+    type === 'checkbox' && !value && console.warn('Value not set for checkbox', name)
+    type === 'radio' && !value && console.warn('Value not set for radio', name)
+    return Base({
+      onChange: ev => {
+        ev.preventDefault()
+        if (type === 'checkbox') {
+          dispatch(set(
+            ['forms', formName, name],
+            addOrRemove(formName, name, value)
+          ))
+        } else if (type === 'radio' || !trackOnInput) {
+          dispatch(set(['forms', formName, name], ev.target.value))
+        }
+      },
+      onInput: ev => {
+        if (trackOnInput) {
+          dispatch(set(['forms', formName, name], ev.target.value))
+        }
+      },
+      onFocus: ev => {
+        trackFocus && dispatch(set(['formState', formName, 'focus', name], true))
+      },
+      onBlur: ev => {
+        trackFocus && dispatch(set(['formState', formName, 'focus', name], false))
+      },
+      type,
+      name,
+      ref: ref => ref && focus && setTimeout(() => setFocus(ref), 100),
+      value: ['checkbox', 'radio'].indexOf(type) > -1 ? value : stateValue,
+      checked: isChecked(type, value, stateValue),
+      ...props
+    })
+  }
+}))
 
 export default Input
 
