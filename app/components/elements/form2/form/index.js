@@ -1,3 +1,4 @@
+import {cloneElement} from 'preact'
 import {path, reduce, some} from 'wasmuth'
 import {getState, dispatch, set} from '/store'
 import {compose} from '/util/compose'
@@ -15,6 +16,7 @@ export const Form = compose({
     onSubmit,
     validations = {},
     initialData = {},
+    children,
     ...props
   }) {
     return Base({
@@ -36,6 +38,7 @@ export const Form = compose({
           }
         })
       },
+      children: addFormNameToChildren(children, name),
       ...props
     })
   }
@@ -52,3 +55,16 @@ const validate = (data, validations) =>
     {},
     Object.keys(validations)
   )
+
+const addFormNameToChildren = (children, formName) => {
+  const names = ['Input', 'SubmitButton', 'Select', 'TextArea']
+  for (var x = 0; x < children.length; x++) {
+    if (children[x] && children[x].nodeName && names.indexOf(children[x].nodeName.name) > -1) {
+      children[x] = cloneElement(children[x], {formName})
+    }
+    if (children[x] && children[x].children && children[x].children.length) {
+      children[x].children = addFormNameToChildren(children[x].children, formName)
+    }
+  }
+  return children
+}

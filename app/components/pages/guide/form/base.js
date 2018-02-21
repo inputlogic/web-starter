@@ -12,20 +12,20 @@ export const ExampleForm = ({formProps}) =>
             </Field>
           </div>,
         [
-          <Input name='name' formName='example' />,
-          <Input name='name2' trackOnInput trackFocus formName='example' />,
-          <Input name='email' type='email' formName='example' />,
-          <Input name='password' type='password' formName='example' className='fancy-label' />,
-          <Input name='confirmPassword' type='password' formName='example' />,
-          <Input name='checkbox' type='checkbox' formName='example' value='c1' />,
-          <Input name='checkbox' type='checkbox' formName='example' value='c2' />,
-          <Input name='radio' type='radio' value='r1' formName='example' />,
-          <Input name='radio' type='radio' value='r2' formName='example' />,
-          <Input name='date' type='date' formName='example' />,
-          <Input name='number' type='number' formName='example' />
+          <Input name='name' />,
+          <Input name='name2' trackOnInput trackFocus />,
+          <Input name='email' type='email' />,
+          <Input name='password' type='password' className='fancy-label' />,
+          <Input name='confirmPassword' type='password' />,
+          <Input name='checkbox' type='checkbox' value='c1' />,
+          <Input name='checkbox' type='checkbox' value='c2' />,
+          <Input name='radio' type='radio' value='r1' />,
+          <Input name='radio' type='radio' value='r2' />,
+          <Input name='date' type='date' />,
+          <Input name='number' type='number' />
         ]
       )}
-      <SubmitButton name='example' >Submit</SubmitButton>
+      <SubmitButton>Submit</SubmitButton>
     </Form>
   </div>
 

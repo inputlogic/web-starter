@@ -16,6 +16,7 @@ import Base from './base'
  *   - trackFocus: Store blur / focus of element in state under formState
  */
 export const Input = withState(
+  'Input',
   ({forms = {}}, {formName, name}) => ({stateValue: path([formName, name], forms)})
 )(({
   name,

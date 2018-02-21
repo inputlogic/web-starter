@@ -4,9 +4,10 @@ import withState from '/util/withState'
 import Base from './base'
 
 export const SubmitButton = withState(
-  ({formState = {}}, {name}) => ({submitting: path([name, 'submitting'], formState)})
-)(({submitting, children, submittingText, name}) =>
-  (!name && console.warn('Form button should have a name')) ||
+  'SubmitButton',
+  ({formState = {}}, {formName}) => ({submitting: path([formName, 'submitting'], formState)})
+)(({submitting, children, submittingText, formName}) =>
+  (!formName && console.warn('Submit button should have a formName')) ||
   Base({
     disabled: submitting,
     type: 'submit',
