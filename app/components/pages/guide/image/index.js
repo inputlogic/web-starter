@@ -21,7 +21,6 @@ const IMAGES = [
 
 export default () =>
   <div>
-    <h1>Images</h1>
     <p>The border changes color when a higher resolution image has loaded.</p>
     <Image images={IMAGES} />
   </div>
