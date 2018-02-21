@@ -1,16 +1,24 @@
 import {TextArea, Select, SubmitButton, Input, Form, Field} from '/components/elements/form2'
 
+const TextField = ({label, hint, ...props}) =>
+  <Field fancy label={label} hint={hint} >
+    <Input {...props} />
+  </Field>
+
+const Checkbox = ({label, hint, ...props}) =>
+  <Field label={label} hint={hint} >
+    <Input type='checkbox' {...props} />
+  </Field>
+
 export const ExampleForm = ({formProps}) =>
   <div>
     <Form {...formProps}>
-      <Field fancy>
-        <Input name='name' />
-      </Field>
+      <TextField name='name' />
       <Field fancy>
         <Input name='name2' trackOnInput trackFocus />
       </Field>
       <Field fancy >
-        <Input name='email' type='email' focus />
+        <Input name='email' type='email' />
       </Field>
       <Field fancy>
         <Input name='password' type='password' />
@@ -18,9 +26,7 @@ export const ExampleForm = ({formProps}) =>
       <Field fancy>
         <Input name='confirmPassword' type='password' />
       </Field>
-      <Field>
-        <Input name='checkbox' type='checkbox' value='c1' />
-      </Field>
+      <Checkbox name='checkbox' value='c1' />
       <Field>
         <Input name='checkbox' type='checkbox' value='c2' />
       </Field>

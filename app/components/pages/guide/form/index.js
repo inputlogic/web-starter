@@ -4,10 +4,10 @@ import Base from './base'
 export const ExampleForm = () => Base({
   formProps: {
     name: 'example',
-    onSubmit: ({data, onComplete, onError}) => {
+    onSubmit: ({data}) => new Promise((resolve, reject) => {
       console.log(data)
-      window.setTimeout(onComplete, 3000)
-    },
+      setTimeout(resolve, 3000)
+    }),
     validations: {
       name: validators([required, v => v !== 'Dale Cooper' && 'Must be Dale Cooper']),
       name2: v => !v && 'Required',

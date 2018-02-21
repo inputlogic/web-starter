@@ -29,14 +29,22 @@ export const Form = compose({
           return
         }
         dispatch(set(['formState', name, 'submitting'], true))
-        onSubmit({
-          data,
-          onComplete: () => dispatch(set(['formState', name, 'submitting'], false)),
-          onError: (errors) => {
-            errors && dispatch(set(['formErrors', name], errors))
-            dispatch(set(['formState', name, 'submitting'], false))
-          }
+        const promise = onSubmit({
+          data
         })
+        if (!promise || !promise.then) {
+          console.warn(`onSubmit for Form "${name}" does not return a Promise!`)
+          return
+        }
+        promise
+          .then(() => dispatch(set(['formState', name, 'submitting'], false)))
+          .catch(err => {
+            if (err instanceof Error) {
+              throw err
+            }
+            dispatch(set(['formErrors', name], err))
+            dispatch(set(['formState', name, 'submitting'], false))
+          })
       },
       children: addFormNameToChildren(children, name),
       ...props
@@ -57,7 +65,7 @@ const validate = (data, validations) =>
   )
 
 const addFormNameToChildren = (children, formName) => {
-  const names = ['Input', 'SubmitButton', 'Select', 'TextArea']
+  const names = ['Input', 'SubmitButton', 'Select', 'TextArea', 'TextField', 'Checkbox']
   for (var x = 0; x < children.length; x++) {
     if (children[x] && children[x].nodeName && names.indexOf(children[x].nodeName.name) > -1) {
       children[x] = cloneElement(children[x], {formName})

@@ -2,6 +2,7 @@ import {path, filter} from 'wasmuth'
 import compose from '/util/compose'
 import withState from '/util/withState'
 import {getState, dispatch, set} from '/store'
+import {throttle} from 'throttle-debounce'
 import Base from './base'
 
 /**
@@ -57,11 +58,11 @@ export const Input = withState(
           dispatch(set(['forms', formName, name], ev.target.value))
         }
       },
-      onInput: ev => {
+      onInput: throttle(200, ev => {
         if (trackOnInput) {
           dispatch(set(['forms', formName, name], ev.target.value))
         }
-      },
+      }, false),
       onFocus: ev => {
         trackFocus && dispatch(set(['formState', formName, 'focus', name], true))
       },
