@@ -24,13 +24,13 @@ export const connect = mapper => {
   if (typeof mapper === 'function') {
     return pipe.apply(this, [
       withRequests((state, props) => mapper(state, props).withRequests || {}),
-      withState((state, props) => mapper(state, props).withState || {}),
+      withState((state, props) => mapper(state, props).withState || {})
     ])
   } else {
     const {withRequests: withRequestsMapper, withState: withStateMapper} = mapper
     return pipe.apply(this, [
-      ...!!withRequests && [withRequests(withRequestsMapper)],
-      ...!!withState && [withState(withStateMapper)]
+      ...!!withRequestsMapper && [withRequests(withRequestsMapper)],
+      ...!!withStateMapper && [withState(withStateMapper)]
     ])
   }
 }
