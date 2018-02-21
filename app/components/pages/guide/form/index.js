@@ -1,3 +1,4 @@
+import {confirmsField, minLength, validators, required} from '/components/elements/form2/validators'
 import Base from './base'
 
 export const ExampleForm = () => Base({
@@ -8,9 +9,10 @@ export const ExampleForm = () => Base({
       window.setTimeout(onComplete, 3000)
     },
     validations: {
+      name: validators([required, v => v !== 'Dale Cooper' && 'Must be Dale Cooper']),
       name2: v => !v && 'Required',
-      password: v => v && v.length < 3 && 'At least 3 characters',
-      confirmPassword: (v, _, {password}) => v !== password && 'Must equal password'
+      password: minLength(3),
+      confirmPassword: confirmsField('password')
     },
     initialData: {
       name: 'Initial Name!',
