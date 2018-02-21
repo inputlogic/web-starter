@@ -18,7 +18,9 @@ export const ExampleForm = () => Base({
       name: 'Initial Name!',
       checkbox: ['c1'],
       radio: 'r2',
-      date: '2018-03-12'
+      date: '2018-03-12',
+      textarea: 'Hello',
+      options: '1'
     }
   }
 })

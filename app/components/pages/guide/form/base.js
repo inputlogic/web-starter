@@ -1,4 +1,4 @@
-import {Select, SubmitButton, Input, Form, Field} from '/components/elements/form2'
+import {TextArea, Select, SubmitButton, Input, Form, Field} from '/components/elements/form2'
 
 export const ExampleForm = ({formProps}) =>
   <div>
@@ -41,6 +41,9 @@ export const ExampleForm = ({formProps}) =>
           <option value='1'>Option 1</option>
           <option value='2'>Option 2</option>
         </Select>
+      </Field>
+      <Field>
+        <TextArea name='textarea' trackOnInput trackFocus />
       </Field>
       <SubmitButton>submit</SubmitButton>
     </Form>
