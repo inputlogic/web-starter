@@ -26,11 +26,11 @@ export const Input = withState(
   value,
   stateValue,
   ...props
-}) =>
-  (!formName && console.warn('Formname not set for Input', name)) ||
-  (type === 'checkbox' && !value && console.warn('Value not set for checkbox', name)) ||
-  (type === 'radio' && !value && console.warn('Value not set for radio', name)) ||
-  Base({
+}) => {
+  !formName && console.warn('Formname not set for Input', name)
+  type === 'checkbox' && !value && console.warn('Value not set for checkbox', name)
+  type === 'radio' && !value && console.warn('Value not set for radio', name)
+  return Base({
     onChange: ev => {
       ev.preventDefault()
       if (type === 'checkbox') {
@@ -59,7 +59,7 @@ export const Input = withState(
     checked: isChecked(type, value, stateValue),
     ...props
   })
-)
+})
 
 export default Input
 
