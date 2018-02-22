@@ -1,4 +1,4 @@
-import {path, pathOr, some, filter, isEmail} from 'wasmuth'
+import {pipe, path, pathOr, some, filter, map, toPairs, isEmail} from 'wasmuth'
 import {throttle as debounceFunction} from 'throttle-debounce'
 
 import {
@@ -11,16 +11,16 @@ import {
 
 const {cloneElement} = Preact
 
-const validateEmail = (formName, field = 'email') => debounceFunction(200, (email) => {
+const validateEmail = (formName, field = 'email') => (email) => {
   if (email.length < 4) return
   if (!isEmail(email)) {
     dispatch(set(['formErrors', formName, field], 'Please enter a valid Email Address'))
   } else {
     dispatch(set(['formErrors', formName, field], null))
   }
-})
+}
 
-const validatePhone = (formName, field = 'phone') => debounceFunction(200, (phone) => {
+const validatePhone = (formName, field = 'phone') => (phone) => {
   const phoneRe = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
   if (!phoneRe.test(phone)) {
     dispatch(set(
@@ -30,33 +30,83 @@ const validatePhone = (formName, field = 'phone') => debounceFunction(200, (phon
   } else {
     dispatch(set(['formErrors', formName, field], null))
   }
-})
+}
 
-const validatePassword = (formName, field = 'password') => debounceFunction(200, (password = '', {min}) => {
-  if (password.length > 3 && password.length < min) {
+const validatePassword = (formName, field = 'password', {min}) => (password = '') => {
+  if (password.length < min) {
     dispatch(set(['formErrors', formName, field], `Password should be at least ${min} characters`))
   } else {
     dispatch(set(['formErrors', formName, field], null))
   }
-})
+}
 
-const handleValidations = (formName, name, type, rules, value) =>
-  (type === 'email' && validateEmail(formName, name)(value)) ||
-  (type === 'tel' && validatePhone(formName, name)(value)) ||
-  (type === 'password' && rules.min && validatePassword(formName, name)(value, rules))
+const getValidator = (formName, {name, type, rules}) =>
+  (type === 'email' && validateEmail(formName, name)) ||
+  (type === 'tel' && validatePhone(formName, name)) ||
+  (type === 'password' && rules.min && validatePassword(formName, name, rules))
+
+const handleValidations = (validators, data) => {
+  for (var k in validators) {
+    if (data[k]) {
+      validators[k](data[k])
+    }
+  }
+}
 
 const updateProps = (children, {formName}) => {
+  const fieldsToValidate = {}
   const names = ['TextField', 'RadioField', 'Radio', 'Checkbox', 'SubmitButton', 'Select', 'TextArea']
+
   for (var x = 0; x < children.length; x++) {
     if (children[x] && children[x].nodeName && names.indexOf(children[x].nodeName.name) > -1) {
       children[x] = cloneElement(children[x], {formName})
+
+      if (children[x].nodeName.name === 'TextField') {
+        const validator = getValidator(formName, children[x].attributes)
+        if (validator) {
+          fieldsToValidate[children[x].attributes.name] = validator
+        }
+      }
     }
     if (children[x] && children[x].children && children[x].children.length) {
-      children[x].children = updateProps(children[x].children, {formName})
+      const {childrenWithProps} = updateProps(children[x].children, {formName})
+      children[x].children = childrenWithProps
     }
   }
-  return children
+
+  return {childrenWithProps: children, fieldsToValidate}
 }
+
+export const FormErrors = withState(
+  'FormErrors',
+  ({forms = {}, formErrors = {}}, {formName}) => {
+    const errors = pipe(
+      pathOr({}, formName),
+      filter(x => x),
+      toPairs
+    )(formErrors)
+    return {
+      errors,
+      hasError: some(x => x, errors),
+      formKeys: pipe(
+        pathOr({}, formName),
+        Object.keys
+      )(forms)
+    }
+  }
+)(({errors, hasError, formKeys}) =>
+  !hasError
+    ? null
+    : <ul>
+      {map(([k, v]) =>
+        <li className='field-hint is-error'>
+          {formKeys.includes(k)
+            ? <span>{k}: {v}</span>
+            : v}
+        </li>
+      , errors)}
+    </ul>
+)
 
 export const Form = ({
   name,
@@ -64,14 +114,18 @@ export const Form = ({
   children,
   ...props
 }) => {
-  const childrenWithProps = updateProps(children, {formName: name})
+  const {childrenWithProps, fieldsToValidate} = updateProps(children, {formName: name})
   const handleSubmit = (ev) => {
     ev.preventDefault()
     dispatch(update(['formState', name], {submitting: true}))
-    const {forms = {}, formErrors = {}} = getState()
-    const data = forms[name]
-    const errors = filter((k, v) => v, formErrors[name] || {})
+
+    const data = path(`forms.${name}`, getState())
+
+    handleValidations(fieldsToValidate, data)
+
+    const errors = filter((k, v) => v, pathOr({}, `formErrors.${name}`, getState()))
     const resp = onSubmit({data, errors, name})
+
     if (!resp || !resp.then) {
       console.warn(
         `onSubmit for Form "${name}" does not return a Promise!
@@ -177,7 +231,7 @@ export const TextArea = withState(
   rows,
   value,
   formName,
-  debounce,
+  debounce = 0,
   placeholder = ''
 }) =>
   <div className='form-row'>
@@ -190,7 +244,7 @@ export const TextArea = withState(
       onInput={debounceFunction(debounce, (ev) =>
         ev.preventDefault() ||
         dispatch(update(['forms', formName], {[name]: ev.target.value}))
-      )}
+      , false)}
     />
   </div>
 )
@@ -222,12 +276,18 @@ export const TextField = withState(
       value={value}
       onInput={debounceFunction(debounce, (ev) =>
         ev.preventDefault() ||
-        handleValidations(formName, name, type, rules, ev.target.value) ||
         dispatch(update(['forms', formName], {[name]: ev.target.value}))
-      )}
-      // setTimeout is needed to wait till after the animation
-      // @TODO: Probably better to use requestAnimationFrame
-      ref={(ref) => ref && focus && setTimeout(() => ref.focus(), 100)}
+      , false)}
+      // If focus prop is set, and no data exists in the form state.
+      ref={(ref) =>
+        ref &&
+        focus &&
+        pipe(
+          pathOr({}, `forms.${formName}`),
+          data => !some(x => x, data)
+        )(getState()) &&
+        window.setTimeout(() => ref.focus(), 100)
+      }
       {...props}
     />
   </Field>
