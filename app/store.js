@@ -5,7 +5,7 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import {pathReducer, actions} from '/util/pathReducer'
 import withStateUtil from '/util/withState'
 
-import {DEBUG} from '/settings'
+// import {DEBUG} from '/settings'
 
 const combine = (reducers) => (state, action) =>
   reducers.reduce(
@@ -25,10 +25,10 @@ const reducers = [
   pathReducer
 ]
 
-if (DEBUG) {
-  reducers.push((state, {type, payload = {}}) =>
-    console.log(type, payload.path, payload.value) || state)
-}
+// if (DEBUG) {
+//   reducers.push((state, {type, payload = {}}) =>
+//     console.log(type, payload.path, payload.value) || state)
+// }
 
 export const store = createStore(
   combine(reducers),
