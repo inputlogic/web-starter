@@ -1,4 +1,4 @@
-import {confirmsField, minLength, validators, required} from '/components/elements/form2/validators'
+import {confirmsField, minLength, validators, required} from '/components/elements/form/validators'
 import Base from './base'
 
 export const ExampleForm = () => Base({

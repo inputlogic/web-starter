@@ -46,12 +46,12 @@ const Home = ({url, modals = {}}) =>
     </div>
 
     <div className='card spaced'>
-      <Form name='SignUp' onSubmit={({data, errors}) => console.log('SignUp', errors, data)}>
+      <Form name='SignIn' onSubmit={({data}) => console.log('SignIn', data)}>
         <h2>Sign In</h2>
         <p>Sign in to your account below.</p>
 
-        <TextField type='email' className='fancy-label' label='Your Email' name='email' />
-        <TextField type='password' className='fancy-label' label='Your Password' name='pass' rules={{min: 8}} />
+        <TextField fancy focus type='email' label='Your Email' name='email' />
+        <TextField fancy type='password' label='Your Password' name='pass' rules={{min: 8}} />
 
         <Checkbox label='Subscibe to your newsletter?' name='newsletter' />
 

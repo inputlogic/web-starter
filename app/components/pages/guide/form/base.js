@@ -1,4 +1,4 @@
-import {TextArea, Select, SubmitButton, Input, Form, Field} from '/components/elements/form2'
+import {TextArea, Select, SubmitButton, Input, Form, Field} from '/components/elements/form'
 
 const TextField = ({label, hint, ...props}) =>
   <Field fancy label={label} hint={hint} >

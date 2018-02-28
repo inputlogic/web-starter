@@ -1,9 +1,28 @@
+import {throttle} from 'throttle-debounce'
 import {path, filter} from 'wasmuth'
+
 import compose from '/util/compose'
 import withState from '/util/withState'
+
 import {getState, dispatch, set} from '/store'
-import {throttle} from 'throttle-debounce'
+
 import Base from './base'
+
+const addOrRemove = (formName, name, value) => {
+  const currentValues = path(['forms', formName, name], getState()) || []
+  return currentValues.indexOf(value) > -1
+    ? filter(x => x !== value, currentValues)
+    : [...currentValues, value]
+}
+
+const isChecked = (type, value, stateValue) => {
+  if (type === 'checkbox') {
+    return stateValue && stateValue.indexOf(value) !== -1
+  }
+  if (type === 'radio') {
+    return stateValue === value
+  }
+}
 
 /**
  * Mimic html input element but use redux
@@ -80,19 +99,3 @@ export const Input = withState(
 }))
 
 export default Input
-
-const addOrRemove = (formName, name, value) => {
-  const currentValues = path(['forms', formName, name], getState()) || []
-  return currentValues.indexOf(value) > -1
-    ? filter(x => x !== value, currentValues)
-    : [...currentValues, value]
-}
-
-const isChecked = (type, value, stateValue) => {
-  if (type === 'checkbox') {
-    return stateValue && stateValue.indexOf(value) !== -1
-  }
-  if (type === 'radio') {
-    return stateValue === value
-  }
-}
