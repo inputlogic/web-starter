@@ -28,6 +28,11 @@ export const isPersonsName = value => {
   }
 }
 
+export const isPhoneNumber = value => {
+  const phoneRe = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
+  return !phoneRe.test(value) && 'Please enter a valid phone (e.g. 18005551234)'
+}
+
 export const required = value => !value && 'Required.'
 
 export const confirmsField = (field, name) => (value, _, data) =>

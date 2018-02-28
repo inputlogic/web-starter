@@ -1,4 +1,4 @@
-import {ErrorOrHint} from '/components/elements/form2/error-or-hint'
+import {ErrorOrHint} from '/components/elements/form/error-or-hint'
 
 export const Field = ({id, formName, name, label, hint = '', children}) =>
   <div className='form-row'>
