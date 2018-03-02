@@ -1,8 +1,7 @@
 import check from 'check-arg-types'
-import {equal, filter} from 'wasmuth'
+import {equal, filter, deepClone} from 'wasmuth'
 
 import {compose, setNodeName} from '/util/compose'
-import deepClone from '/util/deepClone'
 
 import {subscribe, getState} from '/store'
 import {DEBUG} from '/settings'
