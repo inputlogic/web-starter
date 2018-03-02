@@ -53,6 +53,7 @@
   "standard": {
     "globals": [
       "Preact",
+      "W",
       "__ENV__"
     ],
     "ignore": [

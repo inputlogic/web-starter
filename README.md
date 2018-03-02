@@ -1,3 +1,5 @@
+![With Preact](https://i.imgur.com/dxyMgKe.png)
+
 # Brunch + Preact + Babel/ES6
 
 This is a modern JS skeleton with Peact for [Brunch](http://brunch.io).

@@ -1,5 +1,4 @@
 import {cloneElement} from 'preact'
-import {path, reduce, some} from 'wasmuth'
 
 import {getState, dispatch, set} from '/store'
 
@@ -10,7 +9,7 @@ import {isEmail, isPhoneNumber} from '/components/elements/form/validators'
 import Base from './base'
 
 const validate = (data, validations) =>
-  reduce(
+  W.reduce(
     (acc, key) => ({
       [key]: validations[key](data[key], key, data),
       ...acc
@@ -66,10 +65,10 @@ export const Form = compose({
     return Base({
       onSubmit: ev => {
         ev.preventDefault()
-        const data = path(['forms', name], getState())
+        const data = W.path(['forms', name], getState())
         const errors = validate(data, {...validations, ...fieldsToValidate})
         dispatch(set(['formErrors', name], errors))
-        if (some(x => x, Object.values(errors))) {
+        if (W.some(x => x, Object.values(errors))) {
           return
         }
         dispatch(set(['formState', name, 'submitting'], true))

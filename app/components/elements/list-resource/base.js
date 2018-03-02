@@ -1,5 +1,3 @@
-import {map} from 'wasmuth'
-
 import DefaultLoader from '/components/elements/loader'
 
 export const ListResource = ({
@@ -14,7 +12,7 @@ export const ListResource = ({
       Loader
         ? <Loader />
         : <DefaultLoader className='med center' />}
-    {map(child, results)}
+    {_.map(child, results)}
   </div>
 
 export default ListResource
