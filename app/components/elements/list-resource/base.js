@@ -12,7 +12,7 @@ export const ListResource = ({
       Loader
         ? <Loader />
         : <DefaultLoader className='med center' />}
-    {_.map(child, results)}
+    {W.map(child, results)}
   </div>
 
 export default ListResource
