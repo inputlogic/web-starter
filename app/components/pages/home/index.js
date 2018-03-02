@@ -59,6 +59,19 @@ const Home = ({url, modals = {}}) =>
       </Form>
     </div>
 
+    <div className='card spaced'>
+      <Form name='Gavin' onSubmit={({data}) => console.log('Gavin', data)}>
+        <fieldset className='padding-top'>
+          <TextField type='text' placeholder='Email' name='username' />
+          <TextField type='password' placeholder='Password' name='password' />
+        </fieldset>
+        <br />
+        <fieldset className='padding-top'>
+          <SubmitButton class='btn'>Login</SubmitButton>
+        </fieldset>
+      </Form>
+    </div>
+
     <div className='spaced'>
       <Carousel>
         {map((hex) =>

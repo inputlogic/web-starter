@@ -39,7 +39,7 @@ const updateProps = (children, formName) => {
       }
     }
     if (children[x] && children[x].children && children[x].children.length) {
-      const {childrenWithProps} = updateProps(children[x].children, {formName})
+      const {childrenWithProps} = updateProps(children[x].children, formName)
       children[x].children = childrenWithProps
     }
   }
