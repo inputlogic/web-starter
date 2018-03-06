@@ -20,6 +20,12 @@ exports.files = {
 }
 
 exports.plugins = {
+  pleeease: {
+    autoprefixer: true,
+    rem: false,
+    pseudoElements: false,
+    minifier: true
+  },
   babel: {
     presets: [
       ['env', {
