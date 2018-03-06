@@ -8,10 +8,11 @@ export const ListResource = ({
   ...props
 }) =>
   <div {...props}>
-    {isLoading &&
-      Loader
+    {isLoading
+      ? Loader != null
         ? <Loader />
-        : <DefaultLoader className='med center' />}
+        : <DefaultLoader className='med center' />
+      : null}
     {W.map(child, results)}
   </div>
 
