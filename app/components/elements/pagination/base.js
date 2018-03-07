@@ -5,10 +5,10 @@ export const Pagination = ({hasNext, hasPrevious, pages, pageBuilder, activePage
   <nav class='pagination'>
     {hasPrevious
       ? <Link to={pageBuilder(activePage - 1)} >
-        <img src='/images/icons/icon-back.svg' /> Back
+        <span className='arrow back' /> Back
       </Link>
       : <span className='disabled' >
-        <img src='/images/icons/icon-back.svg' /> Back
+        <span className='arrow back' /> Back
       </span>
     }
     <ul>
@@ -25,10 +25,10 @@ export const Pagination = ({hasNext, hasPrevious, pages, pageBuilder, activePage
     </ul>
     {hasNext
       ? <Link to={pageBuilder(activePage + 1)} >
-        Next <img src='/images/icons/icon-next.svg' />
+        Next <span className='arrow next' />
       </Link>
       : <span className='disabled' >
-        Next <img src='/images/icons/icon-next.svg' />
+        Next <span className='arrow next' />
       </span>
     }
   </nav>

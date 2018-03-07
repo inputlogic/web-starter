@@ -72,6 +72,10 @@ const Home = ({url, modals = {}}) =>
       </Form>
     </div>
 
+    <div className='test'>
+      <h1>Lorem ipsum um vero natus</h1>
+    </div>
+
     <div className='spaced'>
       <Carousel>
         {map((hex) =>
