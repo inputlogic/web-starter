@@ -88,7 +88,7 @@ export const Pagination = withState(
   })
 )(({pageSize = 25, request = {}, route = {}}) => {
   const {count, next, previous} = request
-  if (!count) {
+  if (count < pageSize) {
     return
   }
 
