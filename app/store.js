@@ -5,13 +5,7 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import {pathReducer, actions} from '/util/pathReducer'
 import withStateUtil from '/util/withState'
 
-// import {DEBUG} from '/settings'
-
-const combine = (reducers) => (state, action) =>
-  reducers.reduce(
-    (newState, reducer) => reducer(newState, action),
-    state
-  )
+import {DEBUG} from '/settings'
 
 const initialState = {
   token: window.localStorage.getItem('token'),
@@ -21,19 +15,10 @@ const initialState = {
   invalidatedRequests: {}
 }
 
-const reducers = [
-  pathReducer
-]
-
-// if (DEBUG) {
-//   reducers.push((state, {type, payload = {}}) =>
-//     console.log(type, payload.path, payload.value) || state)
-// }
-
 export const store = createStore(
-  combine(reducers),
+  pathReducer,
   initialState,
-  composeWithDevTools()
+  DEBUG ? composeWithDevTools() : undefined
 )
 export const dispatch = store.dispatch
 export const getState = store.getState
