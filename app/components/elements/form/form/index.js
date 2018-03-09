@@ -58,6 +58,7 @@ export const Form = compose({
     onSubmit,
     validations = {},
     initialData = {},
+    handleValidationErrors = false,
     children,
     ...props
   }) {
@@ -68,12 +69,13 @@ export const Form = compose({
         const data = W.path(['forms', name], getState())
         const errors = validate(data, {...validations, ...fieldsToValidate})
         dispatch(set(['formErrors', name], errors))
-        if (W.some(x => x, Object.values(errors))) {
+        if (!handleValidationErrors && W.some(x => x, errors)) {
           return
         }
         dispatch(set(['formState', name, 'submitting'], true))
         const promise = onSubmit({
-          data
+          data,
+          errors
         })
         if (!promise || !promise.then) {
           console.warn(`onSubmit for Form "${name}" does not return a Promise!`)
