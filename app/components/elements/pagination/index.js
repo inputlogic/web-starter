@@ -1,32 +1,12 @@
-/*
-
-< 6 pages:
-  show all page numbers
-
-6 pages:
-  1: 123...6
-  2: 123...6
-  3: 1234...6
-  4: 1...3456
-  5: 1...456
-  6: 1...456
-
-> 7 pages:
-1: 123...7
-2: 123...7
-3: 1234...7
-4: 1...345...7
-5: 1...4567
-6: 1...567
-7: 1...457
-
- */
-
 import {path} from 'wasmuth'
 import {route as preactRoute} from 'preact-router'
+
 import {urlFor} from '/util/route'
 import {updateQuery} from '/util/updateQuery'
+
 import {withState} from '/store'
+import {PAGE_SIZE} from '/settings'
+
 import Base from './base'
 
 const paginationRange = (current, numPages, delta = 1) => {
@@ -86,9 +66,9 @@ export const Pagination = withState(
     request: path([url, 'result'], requests),
     route
   })
-)(({pageSize = 25, request = {}, route = {}}) => {
+)(({pageSize = PAGE_SIZE, request = {}, route = {}, url}) => {
   const {count, next, previous} = request
-  if (count < pageSize) {
+  if (!count || count < pageSize) {
     return
   }
 
