@@ -1,9 +1,7 @@
 import queryString from 'query-string'
 import {reduce} from 'wasmuth'
 
-import {API_URL} from '/settings'
-
-const PAGE_SIZE = 25
+import {API_URL, PAGE_SIZE} from '/settings'
 
 /**
  * Define your API paths here.
