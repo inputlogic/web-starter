@@ -7,7 +7,7 @@ import parseResults from './parseResults'
 import request from './request'
 import {urlFor} from './route'
 import updateQuery from './updateQuery'
-import uploadImage from './uploadImage'
+import uploadFile from './uploadFile'
 import withRequest from './withRequest'
 import withState from './withState'
 
@@ -21,7 +21,7 @@ export default {
   request,
   urlFor,
   updateQuery,
-  uploadImage,
+  uploadFile,
   withRequest,
   withState
 }
