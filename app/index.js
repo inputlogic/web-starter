@@ -1,19 +1,16 @@
 import wasmuth from 'wasmuth'
 
+import Main from '/apps/main'
 import PageNotification from '/components/elements/page-notification'
 import Modals from '/components/modals'
 
-import {Router} from '/util/route'
-
-import routes from '/routes'
-
 window.W = wasmuth
 
-const Main = () =>
-  <div className='wrap'>
+const MainApp = () =>
+  <div className='main-app-container' >
     <PageNotification />
-    <Router routes={routes} />
+    <Main />
     <Modals />
   </div>
 
-Preact.render(<Main />, document.body)
+Preact.render(<MainApp />, document.body)
