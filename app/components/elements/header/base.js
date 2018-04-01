@@ -6,6 +6,8 @@ export default () =>
     &nbsp;
     <a href={urlFor('guide')}>Components</a>
     &nbsp;
+    <a href='/dne' >Does Not Exist</a>
+    &nbsp;
     <a
       href={urlFor(
         'resource',
