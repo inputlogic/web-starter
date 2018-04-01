@@ -39,6 +39,7 @@ export const Route = compose(setNodeName('Route'), {
     }
     if (!equal(currentValues, newValues)) {
       dispatch(set('route', newValues))
+      !newProps.is404 && dispatch(set('didMatchRoute', window.location.href))
       dispatch(set('mobileMenuOpen', false))
       dispatch(set('dropdowns', {}))
     }
