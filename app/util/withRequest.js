@@ -1,6 +1,6 @@
-import {equal, map, path} from 'wasmuth'
+import {equal, map, path, deepClone} from 'wasmuth'
 import {subscribe, getState, dispatch, update, remove} from '/store'
-import request, {getAuthHeader} from '/util/request'
+import baseRequest, {getAuthHeader} from '/util/request'
 import compose from '/util/compose'
 
 export const invalidate = url =>
@@ -21,7 +21,7 @@ export const withRequest = mapper => Component => compose({
       if (requests) {
         const newProps = requestResults(requests)
         if (!equal(newProps, this.state._namespacedState)) {
-          this.setState({_namespacedState: newProps})
+          this.setState({_namespacedState: deepClone(newProps)})
         }
       }
     }
@@ -50,7 +50,7 @@ const performRequests = requests =>
       if (!requests[k]) {
         return
       }
-      return singularRequest(requests[k].url)
+      return singularRequest(requests[k])
     },
     Object.keys(requests)
   )
@@ -62,10 +62,10 @@ const pollRequests = requests =>
         return
       }
       if (typeof requests[k].poll === 'number') {
-        const id = pollRequest(requests[k].url, requests[k].poll)
+        const id = pollRequest(requests[k], requests[k].poll)
         return () => window.clearInterval(id)
       } else if (typeof requests[k].poll === 'boolean') {
-        const id = pollRequest(requests[k].url, 5000)
+        const id = pollRequest(requests[k], 5000)
         return () => window.clearInterval(id)
       } else {
         return () => {}
@@ -78,7 +78,8 @@ const requestResults = requests => {
   const requestsState = getState().requests || {}
   return map(
     (k, v) => {
-      const result = requestsState[v.url] || {}
+      const id = `${v.method || ''}${v.method ? ':' : ''}${v.url}`
+      const result = requestsState[id] || {}
       return v.parse ? v.parse(result) : result['result']
     },
     requests
@@ -136,27 +137,32 @@ const XHR_READY_STATE = {
  */
 const singularRequest = (() => {
   const requests = {}
-  const abort = (url) => () => {
-    const request = requests[url]
+  const abort = (id) => () => {
+    const request = requests[id]
     request.count = request.count - 1
     if (request.count === 0) {
       request.xhr.abort()
     }
   }
-  const makeRequest = (url, keepCount = true) => {
-    const existing = requests[url]
+  const makeRequest = (request, keepCount = true) => {
+    const id = `${request.method || ''}${request.method ? ':' : ''}${request.url}`
+    const existing = requests[id]
     if (!existing || (existing &&
         (existing.xhr.readyState === XHR_READY_STATE.DONE ||
         (existing.xhr.readyState === XHR_READY_STATE.UNSENT)))) {
-      const {xhr} = request({url, headers: getAuthHeader()})
-      requests[url] = {
+      const {xhr} = baseRequest({
+        url: request.url,
+        headers: getAuthHeader(),
+        ...!!request.method && {method: request.method}
+      })
+      requests[id] = {
         xhr,
         count: ((existing || {}).count || 0) + (keepCount ? 1 : 0)
       }
     } else {
-      keepCount && requests[url].count ++
+      keepCount && requests[id].count ++
     }
-    return abort(url)
+    return abort(id)
   }
   return makeRequest
 })()
@@ -165,6 +171,6 @@ const singularRequest = (() => {
  * Repeat request every interval milliseconds
  * returns an abort function that should be called when polling is no longer needed
  */
-const pollRequest = (url, interval = 5000) => {
-  return window.setInterval(() => singularRequest(url, false), interval)
+const pollRequest = (request, interval = 5000) => {
+  return window.setInterval(() => singularRequest(request, false), interval)
 }

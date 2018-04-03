@@ -8,9 +8,7 @@ import {dispatch, set} from '/store'
  * - withProgress (Boolean) will store request progress in state
  */
 export default (args, options = {}) => {
-  // TODO: remove the nosafaricache query and make api support Cache-Control: no-cache header.
-  const {promise, xhr} = request({...args, url: `${args.url}&nosafaricache=${Math.random()}`})
-  // const {promise, xhr} = request(args)
+  const {promise, xhr} = request(args)
   const identifier = args.method ? `${args.method}:${args.url}` : args.url
   dispatch(set(['requests', identifier, 'timestamp'], Date.now()))
 

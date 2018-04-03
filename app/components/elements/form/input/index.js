@@ -60,12 +60,14 @@ export const Input = withState(
     stateValue,
     focus,
     setFocus,
+    autocomplete = 'off',
     ...props
   }) {
     !formName && console.warn('Formname not set for Input', name)
     type === 'checkbox' && !value && console.warn('Value not set for checkbox', name)
     type === 'radio' && !value && console.warn('Value not set for radio', name)
     return Base({
+      autocomplete,
       onChange: ev => {
         ev.preventDefault()
         if (type === 'checkbox') {

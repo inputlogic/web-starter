@@ -2,6 +2,7 @@ import GuideSection from './guide-section'
 import ProgressExample from './progress'
 import Image from './image'
 import ExampleForm from './form'
+import AutoForm from './autoform'
 
 export default ({openExampleModal}) =>
   <div className='guide-component'>
@@ -16,5 +17,8 @@ export default ({openExampleModal}) =>
     </GuideSection>
     <GuideSection name='Form'>
       <ExampleForm />
+    </GuideSection>
+    <GuideSection name='AutoForm'>
+      <AutoForm />
     </GuideSection>
   </div>
