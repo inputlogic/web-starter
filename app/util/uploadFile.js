@@ -16,7 +16,7 @@ export default function uploadFile (file) {
         resolve({fileUrl, fileId, s3Data})
       })
       .catch(err => {
-        console.error('Unable to uploadFile', err)
+        log.error('Unable to uploadFile', err)
         reject(err)
       })
   })

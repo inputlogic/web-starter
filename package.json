@@ -29,7 +29,7 @@
     "classless-component": "1.0.0",
     "ejs": "2.5.7",
     "less-brunch": "2.10.0",
-    "pleeease-brunch": "^3.0.0",
+    "pleeease-brunch": "3.0.0",
     "preact": "8.2.7",
     "preact-portal": "1.1.2",
     "preact-router": "2.6.0",
@@ -55,6 +55,8 @@
     "globals": [
       "Preact",
       "W",
+      "log",
+      "Rollbar",
       "__ENV__"
     ],
     "ignore": [
