@@ -46,7 +46,7 @@ const Home = ({url, modals = {}}) =>
     </div>
 
     <div className='card spaced'>
-      <Form name='SignIn' onSubmit={({data}) => console.log('SignIn', data)}>
+      <Form name='SignIn' onSubmit={({data}) => log.debug('SignIn', data)}>
         <h2>Sign In</h2>
         <p>Sign in to your account below.</p>
 
@@ -60,7 +60,7 @@ const Home = ({url, modals = {}}) =>
     </div>
 
     <div className='card spaced'>
-      <Form name='Gavin' onSubmit={({data}) => console.log('Gavin', data)}>
+      <Form name='Gavin' onSubmit={({data}) => log.debug('Gavin', data)}>
         <fieldset className='padding-top'>
           <TextField type='text' placeholder='Email' name='username' />
           <TextField type='password' placeholder='Password' name='password' />

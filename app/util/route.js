@@ -67,7 +67,7 @@ export const Route = compose(setNodeName('Route'), {
         return NotAuthed ? <NotAuthed /> : null
       }
     } else if (isAuthed != null) {
-      console.warn(`isAuthed for route "${name}" should be a function that accepts the current state and returns a Boolean!`)
+      log.warning(`isAuthed for route "${name}" should be a function that accepts the current state and returns a Boolean!`)
     }
     const type = toType(Component)
     if (type === 'function') {
@@ -82,7 +82,7 @@ export const Route = compose(setNodeName('Route'), {
         return <Match />
       }
     }
-    console.warn(`Route failed to find a Component to render!`)
+    log.warning(`Route failed to find a Component to render!`)
   }
 })
 
@@ -120,7 +120,7 @@ export const Router = pipe(
 export const urlFor = (name, {args = {}, queries = {}} = {}) => {
   const rule = routes[name]
   if (!rule) {
-    console.warn('No route found for name: ' + name)
+    log.warning('No route found for name: ' + name)
   }
   const replaced = reduce(
     (acc, k) => acc.replace(`:${k}`, args[k]),

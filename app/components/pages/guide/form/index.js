@@ -5,7 +5,7 @@ export const ExampleForm = () => Base({
   formProps: {
     name: 'example',
     onSubmit: ({data}) => new Promise((resolve, reject) => {
-      console.log(data)
+      log.debug(data)
       setTimeout(resolve, 3000)
     }),
     validations: {

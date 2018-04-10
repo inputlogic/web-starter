@@ -35,7 +35,7 @@ document.body.addEventListener('click', (ev) => {
 export default withState(
   ({dropdowns}, {uid}) => {
     if (!uid) {
-      console.warn('<Dropdown> must include a uid prop.')
+      log.warning('<Dropdown> must include a uid prop.')
     }
     return {
       isOpen: !!dropdowns[uid],

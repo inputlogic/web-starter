@@ -78,7 +78,7 @@ export const Form = compose({
           errors
         })
         if (!promise || !promise.then) {
-          console.warn(`onSubmit for Form "${name}" does not return a Promise!`)
+          log.warning(`onSubmit for Form "${name}" does not return a Promise!`)
           return
         }
         promise

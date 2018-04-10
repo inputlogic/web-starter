@@ -42,7 +42,7 @@ export default (nodeName, mapper) => {
       if (DEBUG) {
         const dupes = onlyDupes(Object.keys(props), Object.keys(_namespacedState))
         if (dupes.length) {
-          console.warn(
+          log.warning(
             `${nodeName} props are being defined twice.
             Avoid, \`...props,\` in mapper.
             ${dupes}`
@@ -51,7 +51,7 @@ export default (nodeName, mapper) => {
         // Uncomment this to see a lot of warnings
         const funcs = Object.keys(filter(v => toType(v) === 'function', _namespacedState))
         if (funcs.length) {
-          console.warn(
+          log.warning(
             `${nodeName} withState mapper returns an object with functions.
             You should rather only return values needed from state in this object.
             Build the functions in the component that receives withState

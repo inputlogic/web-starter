@@ -43,16 +43,16 @@ xhr.prototype.open = function () {
     if (this.responseURL.indexOf(API_URL) === -1) return
     switch (this.status) {
       case 401:
-        console.warn('401', this.responseText)
+        log.warning('401', this.responseText)
         logout()
         break
 
       case 402:
-        console.error('User subscription is no longer valid! @TODO: this need to be handled.')
+        log.error('User subscription is no longer valid! @TODO: this need to be handled.')
         break
 
       case 403:
-        console.warn('403', this.responseText)
+        log.warning('403', this.responseText)
         logout()
         break
     }

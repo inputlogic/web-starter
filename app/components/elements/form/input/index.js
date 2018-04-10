@@ -62,9 +62,9 @@ export const Input = withState(
     setFocus,
     ...props
   }) {
-    !formName && console.warn('Formname not set for Input', name)
-    type === 'checkbox' && !value && console.warn('Value not set for checkbox', name)
-    type === 'radio' && !value && console.warn('Value not set for radio', name)
+    !formName && log.warning('Formname not set for Input', name)
+    type === 'checkbox' && !value && log.warning('Value not set for checkbox', name)
+    type === 'radio' && !value && log.warning('Value not set for radio', name)
     return Base({
       onChange: ev => {
         ev.preventDefault()
