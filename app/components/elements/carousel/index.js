@@ -16,7 +16,8 @@ function init () {
 
 function next (ev) {
   ev.preventDefault()
-  const n = this.state.active >= this.props.children.length - 1
+  const active = this.state.active + this.state.numFit
+  const n = active >= this.props.children.length - 1
     ? 0
     : this.state.active + 1
   dispatch(set(['Carousel', this._uid], n))
@@ -25,7 +26,7 @@ function next (ev) {
 function prev (ev) {
   ev.preventDefault()
   const n = this.state.active <= 0
-    ? this.props.children.length - 1
+    ? this.props.children.length - (this.state.numFit + 1)
     : this.state.active - 1
   dispatch(set(['Carousel', this._uid], n))
 }
@@ -33,9 +34,14 @@ function prev (ev) {
 function getRef (ref) {
   if (!ref || this.ref) return
   this.ref = ref
-  window.requestAnimationFrame(() =>
-    this.setState({...this.state, width: this.ref.offsetWidth})
-  )
+  window.requestAnimationFrame(() => {
+    const width = this.ref.offsetWidth
+    const parent = this.ref.parentNode
+    const numFit = parent != null
+      ? Math.max(0, Math.floor(parent.offsetWidth / width) - 1)
+      : 0
+    this.setState({...this.state, width, numFit})
+  })
 }
 
 function getStyle (idx, active) {
