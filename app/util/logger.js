@@ -9,8 +9,12 @@ const methodMap = {
 }
 
 const logger = method => (...args) => {
-  DEBUG && console[methodMap[method]].apply(console, args)
-  Rollbar[method].apply(Rollbar, args)
+  if (DEBUG) {
+    console[methodMap[method]].apply(console, args)
+  }
+  if (['critical', 'error'].includes(method)) {
+    Rollbar[method].apply(Rollbar, args)
+  }
 }
 
 export default {
