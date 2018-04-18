@@ -1,3 +1,8 @@
+import W from 'wasmuth'
+import render from 'preact-render-to-string'
+
+import routes from '/routes'
+
 const url = require('url')
 const http = require('http')
 const fs = require('fs')
@@ -12,12 +17,19 @@ const indexFile = './public/index.html'
 const renderIndex = (data, response) =>
   fs.readFile(indexFile, {encoding: 'utf8'}, (_, content) => {
     response.writeHead(200, { 'Content-Type': 'text/html' })
-    response.end(ejs.render(content, {og: 1, ...data}), 'utf-8')
+    response.end(ejs.render(content, {
+      og: 5,
+      prerender: `<script>console.log(${JSON.stringify(routes)})</script>`,
+      ...data
+    }), 'utf-8')
   })
 
 http.createServer((request, response) => {
   const search = url.parse(request.url).search
-  const parsed = queryString.parse(search)
+  const parsed = {
+    ...queryString.parse(search),
+    url: request.url
+  }
 
   // Remove the query to prevent query strings from breaking request.
   // This means devs working on css don't need to reload the page
@@ -46,6 +58,16 @@ http.createServer((request, response) => {
   }
 
   const contentType = mimeTypes[extname] || 'application/octet-stream'
+
+  const routePairs = W.pipe(
+    W.toPairs,
+    W.map(W.last)
+  )(routes)
+  const match = W.find(W.where('path', request.url), routePairs)
+  if (match !== undefined) {
+    const html = render(match.component({}))
+    parsed.prerender = html
+  }
 
   fs.readFile(filePath, (error, content) => {
     if (error) {

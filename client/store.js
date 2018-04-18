@@ -7,9 +7,17 @@ import withStateUtil from '/util/withState'
 
 import {DEBUG} from '/settings'
 
+const getStorageItem = key => {
+  try {
+    return window.localStorage.getItem('token')
+  } catch (_) {
+    return null
+  }
+}
+
 const initialState = {
-  token: window.localStorage.getItem('token'),
-  accountStatus: window.localStorage.getItem('accountStatus'),
+  token: getStorageItem('token'),
+  accountStatus: getStorageItem('accountStatus'),
   dropdowns: {},
   invalidatedRequests: {}
 }

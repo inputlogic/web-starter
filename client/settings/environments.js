@@ -16,15 +16,19 @@ const environments = {
 }
 
 export const environment = (() => {
-  const host = window.location.host
-  const current = find(
-    (env) => toType(environments[env]) === 'array'
-      ? some(v => v === host, environments[env])
-      : environments[env] === host,
-    Object.keys(environments)
-  )
-  if (!current) {
-    throw new Error('No environment matching current url')
+  try {
+    const host = window.location.host
+    const current = find(
+      (env) => toType(environments[env]) === 'array'
+        ? some(v => v === host, environments[env])
+        : environments[env] === host,
+      Object.keys(environments)
+    )
+    if (!current) {
+      throw new Error('No environment matching current url')
+    }
+    return current
+  } catch (_) {
+    return process.env.NODE_ENV || 'development'
   }
-  return current
 })()

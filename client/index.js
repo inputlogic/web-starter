@@ -20,4 +20,4 @@ const MainApp = () =>
     <Modals />
   </div>
 
-Preact.render(<MainApp />, document.body)
+Preact.render(<MainApp />, document.body, document.body.children[0])

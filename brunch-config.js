@@ -30,31 +30,6 @@ exports.plugins = {
     pseudoElements: false,
     minifier: true
   },
-  babel: {
-    presets: [
-      ['env', {
-        'targets': {
-          'browsers': ['last 2 versions']
-        }
-      }],
-      'react'
-    ],
-    plugins: [
-      'transform-object-rest-spread',
-      ['module-resolver/lib/index.js', {
-        'alias': {
-          // This will cause require paths starting with `/` to resolve to the
-          // `client` directory. i.e. `/app.js` resolves to `client/app.js`.
-          '': './client'
-        }
-      }],
-      ['jsx-import/src/index.js', {
-        'identifier': 'Preact',
-        'moduleName': 'preact'
-      }],
-      ['transform-react-jsx', {'pragma': 'Preact.h'}]
-    ]
-  },
   uglify: {
     mangle: false,
     keep_fnames: true,
