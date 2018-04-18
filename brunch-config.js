@@ -2,21 +2,25 @@
 exports.files = {
   javascripts: {
     joinTo: {
-      'vendor.js': /^(?!app)/,
-      'app.js': /^app/
+      'vendor.js': /^(?!client)/,
+      'app.js': /^client/
     }
   },
   stylesheets: {
     joinTo: {
-      'app.css': /^app/
+      'app.css': /^client/
     },
     order: {
       before: [
-        'app/stylesheets/reset.less',
-        'app/stylesheets/base.less'
+        'client/stylesheets/reset.less',
+        'client/stylesheets/base.less'
       ]
     }
   }
+}
+
+exports.paths = {
+  watched: ['client', 'test', 'vendor']
 }
 
 exports.plugins = {
@@ -40,8 +44,8 @@ exports.plugins = {
       ['module-resolver/lib/index.js', {
         'alias': {
           // This will cause require paths starting with `/` to resolve to the
-          // `app` directory. i.e. `/app.js` resolves to `app/app.js`.
-          '': './app'
+          // `client` directory. i.e. `/app.js` resolves to `client/app.js`.
+          '': './client'
         }
       }],
       ['jsx-import/src/index.js', {
