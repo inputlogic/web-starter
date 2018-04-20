@@ -24,6 +24,8 @@ const renderIndex = (data, response) =>
     }), 'utf-8')
   })
 
+global.W = W
+
 http.createServer((request, response) => {
   const search = url.parse(request.url).search
   const parsed = {
@@ -64,6 +66,7 @@ http.createServer((request, response) => {
     W.map(W.last)
   )(routes)
   const match = W.find(W.where('path', request.url), routePairs)
+  console.log('match', match)
   if (match !== undefined) {
     const html = render(match.component({}))
     parsed.prerender = html

@@ -11,7 +11,8 @@ export default connect({
     }
   }
 )
-})(({query: {results, isLoading}, children, ...props}) => {
+})(({query = {}, children, ...props}) => {
+  const {results, isLoading} = query
   const child = children[0]
   if (!child || typeof child !== 'function') {
     throw new Error('ListResource requires a function as its only child')

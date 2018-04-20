@@ -4,16 +4,9 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 
 import {pathReducer, actions} from '/util/pathReducer'
 import withStateUtil from '/util/withState'
+import getStorageItem from '/util/getStorageItem'
 
 import {DEBUG} from '/settings'
-
-const getStorageItem = key => {
-  try {
-    return window.localStorage.getItem('token')
-  } catch (_) {
-    return null
-  }
-}
 
 const initialState = {
   token: getStorageItem('token'),

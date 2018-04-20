@@ -43,7 +43,7 @@
     "to-camel-case": "1.0.0",
     "to-snake-case": "1.0.0",
     "uglify-js-brunch": "2.10.0",
-    "wasmuth": "1.10.0"
+    "wasmuth": "1.11.0"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.2",

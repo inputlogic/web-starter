@@ -2,6 +2,7 @@ import {equal, map, path} from 'wasmuth'
 import {subscribe, getState, dispatch, update, remove} from '/store'
 import request, {getAuthHeader} from '/util/request'
 import compose from '/util/compose'
+import root from '/util/root'
 
 export const invalidate = url =>
   dispatch(update(['invalidatedRequests'], {[url]: true}))
@@ -63,10 +64,10 @@ const pollRequests = requests =>
       }
       if (typeof requests[k].poll === 'number') {
         const id = pollRequest(requests[k].url, requests[k].poll)
-        return () => window.clearInterval(id)
+        return () => root.clearInterval(id)
       } else if (typeof requests[k].poll === 'boolean') {
         const id = pollRequest(requests[k].url, 5000)
-        return () => window.clearInterval(id)
+        return () => root.clearInterval(id)
       } else {
         return () => {}
       }
@@ -166,5 +167,5 @@ const singularRequest = (() => {
  * returns an abort function that should be called when polling is no longer needed
  */
 const pollRequest = (url, interval = 5000) => {
-  return window.setInterval(() => singularRequest(url, false), interval)
+  return root.setInterval(() => singularRequest(url, false), interval)
 }
