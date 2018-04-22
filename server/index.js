@@ -36,7 +36,7 @@ http.createServer((request, response) => {
     filePath = indexFile
   }
 
-  if (filePath === indexFile && ua.browser.name === 'IE') {
+  if (ua.browser.name === 'IE') {
     renderBrowserNotSupported(parsed, response)
     return
   }
