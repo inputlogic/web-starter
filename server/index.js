@@ -5,9 +5,17 @@ const path = require('path')
 
 const ejs = require('ejs')
 const queryString = require('query-string')
+const browserParser = require('ua-parser-js')
 
 const port = process.env.PORT || 5000
 const indexFile = './public/index.html'
+const notSupportedFile = './public/unsupported.html'
+
+const renderBrowserNotSupported = (data, response) =>
+  fs.readFile(notSupportedFile, {encoding: 'utf8'}, (_, content) => {
+    response.writeHead(200, { 'Content-Type': 'text/html' })
+    response.end(ejs.render(content, {og: 1, ...data}), 'utf-8')
+  })
 
 const renderIndex = (data, response) =>
   fs.readFile(indexFile, {encoding: 'utf8'}, (_, content) => {
@@ -18,6 +26,7 @@ const renderIndex = (data, response) =>
 http.createServer((request, response) => {
   const search = url.parse(request.url).search
   const parsed = queryString.parse(search)
+  const ua = browserParser(request.headers['user-agent'])
 
   // Remove the query to prevent query strings from breaking request.
   // This means devs working on css don't need to reload the page
@@ -25,6 +34,11 @@ http.createServer((request, response) => {
   let filePath = './public' + request.url.split('?')[0]
   if (filePath === './public/') {
     filePath = indexFile
+  }
+
+  if (filePath === indexFile && ua.browser.name === 'IE') {
+    renderBrowserNotSupported(parsed, response)
+    return
   }
 
   const extname = String(path.extname(filePath)).toLowerCase()
