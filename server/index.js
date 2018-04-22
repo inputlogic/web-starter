@@ -14,7 +14,7 @@ const notSupportedFile = './public/unsupported.html'
 const renderBrowserNotSupported = (data, response) =>
   fs.readFile(notSupportedFile, {encoding: 'utf8'}, (_, content) => {
     response.writeHead(200, { 'Content-Type': 'text/html' })
-    response.end(ejs.render(content, {og: 1, ...data}), 'utf-8')
+    response.end(ejs.render(content, data), 'utf-8')
   })
 
 const renderIndex = (data, response) =>
