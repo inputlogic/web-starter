@@ -5,10 +5,10 @@ import Carousel from '/project/elements/carousel'
 import Dropdown from '/project/elements/dropdown'
 import {
   Form,
+  SubmitButton,
   TextField,
-  Checkbox,
-  SubmitButton
-} from '/project/elements/form'
+  Checkbox
+} from '/project/elements/styled-form'
 import {Row, Column} from '/project/elements/grid'
 import Page from '/project/elements/page'
 

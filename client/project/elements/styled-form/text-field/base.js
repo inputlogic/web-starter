@@ -1,4 +1,5 @@
-import {Field, Input} from '/project/elements/form'
+import Field from '../field'
+import {Input} from '/project/elements/form'
 
 export default ({focus, type, name, formName, ...props}) =>
   <Field formName={formName} {...props}>

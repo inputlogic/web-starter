@@ -1,7 +1,9 @@
 import {compose, setNodeName} from '/util/compose'
 import render from './base'
 
-export default compose(
+export const TextField = compose(
   setNodeName('TextField'),
   {render}
 )
+
+export default TextField

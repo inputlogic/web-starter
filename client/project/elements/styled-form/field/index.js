@@ -1,5 +1,4 @@
 import Preact from 'preact'
-import {filter} from 'wasmuth'
 import Base, {FancyField as FancyBase} from './base'
 
 const {cloneElement} = Preact
@@ -7,7 +6,7 @@ const {cloneElement} = Preact
 export const Field = ({fancy, children, label, hint}) => {
   const Child = children[0]
   const {formName, name, value, className} = (Child.attributes || {})
-  const id = filter(x => x, [formName, name, value]).join('-')
+  const id = W.filter(x => x, [formName, name, value]).join('-')
   const BaseComponent = fancy ? FancyBase : Base
   return BaseComponent({
     children: cloneElement(Child, {
