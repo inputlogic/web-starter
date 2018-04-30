@@ -11,7 +11,8 @@ const initialState = {
   token: window.localStorage.getItem('token'),
   accountStatus: window.localStorage.getItem('accountStatus'),
   dropdowns: {},
-  invalidatedRequests: {}
+  invalidatedRequests: {},
+  nested: {test: true}
 }
 
 export const store = createStore(

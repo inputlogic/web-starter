@@ -12,6 +12,17 @@ import {
 import {Row, Column} from '/project/elements/grid'
 import Page from '/project/elements/page'
 
+import {watchPath, dispatch, remove} from '/store'
+
+watchPath(['nested', 'test'], (newVal, oldVal) =>
+  console.warn('nested', newVal, oldVal)
+)
+
+const removeNested = ev => {
+  ev.preventDefault()
+  dispatch(remove('nested.test'))
+}
+
 const Home = ({url, modals = {}}) =>
   <Page>
     <div className='intro' style='max-width: 640px; margin: 1rem auto;'>
@@ -25,7 +36,7 @@ const Home = ({url, modals = {}}) =>
         <h2>Dropdown</h2>
         <Dropdown uid='food'>
           <ul>
-            <li><a href=''>Hotdog</a></li>
+            <li><a onClick={removeNested} href='#'>Hotdog</a></li>
             <li><a href=''>Cola</a></li>
             <li><a href=''>Fruit Smoothie</a></li>
             <li><a href=''>Dinasaur Egg</a></li>
