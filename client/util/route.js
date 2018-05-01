@@ -15,7 +15,7 @@ import PreactRouter from 'preact-router'
 import {compose, setNodeName} from '/util/compose'
 
 import {set, dispatch, getState} from '/store'
-import routes from '/routes'
+import routes from '/allRoutes'
 
 const toType = check.prototype.toType
 
