@@ -1,4 +1,4 @@
-![With Preact](https://i.imgur.com/dxyMgKe.png)
+![With Preact](https://imgur.com/a/bQZVL5J)
 
 # Brunch + Preact + Babel/ES6
 
