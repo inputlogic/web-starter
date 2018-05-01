@@ -64,7 +64,8 @@
       "__ENV__"
     ],
     "ignore": [
-      "build"
+      "build",
+      "client/assets"
     ]
   }
 }
