@@ -4,24 +4,64 @@
   transition: @transition;
   display: inline-block;
   outline: none;
-  background-color: @blue;
-  border: 1px solid @blue;
+  background-color: @primary-color;
+  border: 1px solid @primary-color;
   border-radius: @border-radius;
-  padding: @gutter/2 @gutter;
+  padding: @gutter/2.5 @gutter*1.4;
   color: @white;
   cursor: pointer;
-  line-height: 1;
-  font-size: 0.9rem;
-  font-weight: 900;
-  letter-spacing: 0.125em;
-  text-transform: uppercase;
+  line-height: 1.2;
+  font-size: .95rem;
+  font-weight: 500;
+  letter-spacing: 0.05rem;
   text-align: center;
   text-decoration: none;
 
+  @media @phone {
+    padding: @gutter/3 @gutter/1.5;
+    font-size: .85rem;
+  }
+
   &:hover {
-    background-color: @teal;
-    border-color: @teal;
+    background-color: lighten(@primary-color, 11%);
+    border-color: lighten(@primary-color, 11%);
     color: @white;
+  }
+
+  &.btn-secondary {
+    background-color: @grey;
+    border: 1px solid @grey;
+    color: @white;
+
+    &:hover {
+      color: @white;
+      background-color: darken(@grey, 10%);
+      border-color: darken(@grey, 10%);
+    }
+  }
+
+  &.btn-tertiary {
+    background-color: @text-color;
+    border: 1px solid @text-color;
+    color: @white;
+
+    &:hover {
+      color: @white;
+      background-color: lighten(@text-color, 12%);
+      border-color: lighten(@text-color, 12%);
+    }
+  }
+
+  &.btn-cation {
+    background-color: @error;
+    border: 1px solid @error;
+    color: @white;
+
+    &:hover {
+      color: @white;
+      background-color: darken(@error, 15%);
+      border-color: darken(@error, 15%);
+    }
   }
 
   &.btn-stretchy {
@@ -29,7 +69,8 @@
   }
 
   &.btn-medium {
-    padding: @gutter/3 @gutter;
+    padding: @gutter/3 @gutter/1.5;
+    font-size: .85rem;
   }
 
   &.btn-small {
@@ -39,19 +80,69 @@
 
   &.btn-outline {
     background-color: transparent;
-    border: 1px solid @blue;
-    color: @blue;
+    border: 1px solid @text-color;
+    color: @text-color;
 
     &:hover {
       color: @white;
-      background-color: @teal;
-      border-color: @teal;
+      background-color: @text-color;
+      border-color: @text-color;
+    }
+  }
+
+  &.icon-left,
+  &.icon-right {
+    display: inline-flex;
+    align-items: center;
+
+    &::before,
+    &::after {
+      display: block;
+      content: '';
+      width: 1em;
+      height: 1em;
+      margin-right: .55rem;
+      background: no-repeat center center;
+      background-size: 100% 100%;
+      transition: none;
+    }
+
+    &::after {
+      margin-right: unset;
+      margin-left: .55rem;
+    }
+
+    &.icon-right::before,
+    &.icon-left::after  {
+      display: none;
+    }
+
+    &.icon-delete {
+      &::before,
+      &::after {
+        background-image: url(../images/icons/icon-trash.svg);
+      }
+    } 
+  }
+
+  &.icon-plus {
+    &::before,
+    &::after {
+      background-image: url(../images/icons/icon-plus.svg);
+      background-size: 85%;
+    }
+  }
+
+  &.icon-edit {
+    &::before,
+    &::after {
+      background-image: url(../images/icons/icon-edit.svg);
     }
   }
 
   &:active {
-    background-color: @teal;
-    border-color: @teal;
+    background-color: orange;
+    border-color: orange;
     transform: translate(0, 2px);
   }
 
@@ -63,5 +154,24 @@
     text-transform: none;
     font-weight: 400;
     letter-spacing: 0;
+  }
+}
+
+.btn-icon {
+  display: inline-block;
+  outline: none;
+  width: 1rem;
+  height: 1rem;
+  background: red;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  text-indent: -9999px;
+  text-decoration: none;
+  background: no-repeat center center;
+  background-size: 100% 100%;
+
+  &.icon-delete {
+    background-image: url(../images/icons/icon-trash-dark.svg);
   }
 }

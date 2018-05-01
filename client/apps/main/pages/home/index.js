@@ -16,7 +16,7 @@ import Page from '/project/elements/page'
 const Home = ({url, modals = {}}) =>
   <Page>
     <Helmet
-      title='My Title'
+      title='Purposely | Home'
       meta={[
         {name: 'description', content: 'Helmet application'},
         {property: 'og:type', content: 'article'}
