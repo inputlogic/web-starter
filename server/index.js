@@ -3,7 +3,7 @@ import render from 'preact-render-to-string'
 
 import Helmet from 'preact-helmet'
 
-import routes from '/routes'
+import routes from '/allRoutes'
 
 const url = require('url')
 const http = require('http')
