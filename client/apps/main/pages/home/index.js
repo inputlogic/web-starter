@@ -1,4 +1,4 @@
-import {map, range} from 'wasmuth'
+import {map} from 'wasmuth'
 import Helmet from 'preact-helmet'
 
 // Components
