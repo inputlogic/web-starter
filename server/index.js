@@ -1,6 +1,8 @@
 import W from 'wasmuth'
 import render from 'preact-render-to-string'
 
+import Helmet from 'preact-helmet'
+
 import routes from '/routes'
 
 const url = require('url')
@@ -10,23 +12,28 @@ const path = require('path')
 
 const ejs = require('ejs')
 const queryString = require('query-string')
+const uaParser = require('ua-parser-js')
 
 const port = process.env.PORT || 5000
 const indexFile = './public/index.html'
+const notSupportedFile = './public/unsupported.html'
 
-const renderIndex = (data, response) =>
-  fs.readFile(indexFile, {encoding: 'utf8'}, (_, content) => {
-    response.writeHead(200, { 'Content-Type': 'text/html' })
+const renderFile = file => (data, response) =>
+  fs.readFile(file, {encoding: 'utf8'}, (_, content) => {
+    response.writeHead(200, {'Content-Type': 'text/html'})
     response.end(ejs.render(content, {
-      og: 5,
-      prerender: `<script>console.log(${JSON.stringify(routes)})</script>`,
+      prerenderHead: data.prerenderHead || '<title>Web-Starter</title>',
       ...data
     }), 'utf-8')
   })
 
+const renderIndex = renderFile(indexFile)
+const renderUnsupported = renderFile(notSupportedFile)
+
 global.W = W
 
 http.createServer((request, response) => {
+  const ua = uaParser(request.headers['user-agent'])
   const search = url.parse(request.url).search
   const parsed = {
     ...queryString.parse(search),
@@ -39,6 +46,11 @@ http.createServer((request, response) => {
   let filePath = './public' + request.url.split('?')[0]
   if (filePath === './public/') {
     filePath = indexFile
+  }
+
+  if (ua.browser.name === 'IE') {
+    renderUnsupported(parsed, response)
+    return
   }
 
   const extname = String(path.extname(filePath)).toLowerCase()
@@ -66,10 +78,15 @@ http.createServer((request, response) => {
     W.map(W.last)
   )(routes)
   const match = W.find(W.where('path', request.url), routePairs)
-  console.log('match', match)
   if (match !== undefined) {
     const html = render(match.component({}))
     parsed.prerender = html
+    const head = Helmet.rewind()
+    parsed.prerenderHead = `
+      ${head.title.toString()}
+      ${head.meta.toString()}
+      ${head.link.toString()}
+    `
   }
 
   fs.readFile(filePath, (error, content) => {

@@ -10,8 +10,6 @@ import logger from '/util/logger'
 window.W = wasmuth
 window.log = logger
 
-log.debug('@TODO: Please remove me.', true, 981923)
-
 const MainApp = () =>
   <div className='main-app-container' >
     <PageNotification />

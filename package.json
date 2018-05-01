@@ -19,7 +19,7 @@
   "dependencies": {
     "auto-reload-brunch": "2.7.1",
     "babel-brunch": "6.1",
-    "babel-cli": "^6.26.0",
+    "babel-cli": "6.26.0",
     "babel-plugin-jsx-import": "github:staydecent/babel-plugin-jsx-import",
     "babel-plugin-module-resolver": "3.0.0",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
@@ -32,8 +32,9 @@
     "less-brunch": "2.10.0",
     "pleeease-brunch": "3.0.0",
     "preact": "8.2.7",
+    "preact-helmet": "4.0.0-alpha-3",
     "preact-portal": "1.1.2",
-    "preact-render-to-string": "^3.7.0",
+    "preact-render-to-string": "3.7.0",
     "preact-router": "2.6.0",
     "query-string": "5.0.1",
     "redux": "3.7.2",
@@ -42,6 +43,7 @@
     "throttle-debounce": "1.0.1",
     "to-camel-case": "1.0.0",
     "to-snake-case": "1.0.0",
+    "ua-parser-js": "0.7.17",
     "uglify-js-brunch": "2.10.0",
     "wasmuth": "1.11.0"
   },
