@@ -2,13 +2,13 @@ import Header from '/project/elements/header'
 import {App} from '/project/elements/app'
 import {Router} from '/util/route'
 
-import routes from './routes'
+import allRoutes from '/routes'
 
 export const Main = () =>
-  <App routes={routes}>
+  <App routes={allRoutes}>
     <Header />
     <div className='wrap'>
-      <Router routes={routes} />
+      <Router routes={allRoutes} />
     </div>
   </App>
 
