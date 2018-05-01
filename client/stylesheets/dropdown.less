@@ -22,7 +22,14 @@
     opacity: 0;
   }
 
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
   li {
+    list-style: none;
+    margin: 0;
     &.hr {
       background-color: @light-grey;
       width: 100%;
@@ -43,7 +50,7 @@
       padding: 15px 30px;
 
       &:hover {
-        background-color: red;
+        background-color: @light-grey;
         color: @white;
       }
     }
