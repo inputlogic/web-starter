@@ -1,24 +1,80 @@
+@font-face {
+  font-family: 'Circular Air Pro';
+  src: url('../fonts/CircularAirPro-Light.eot');
+  src: url('../fonts/CircularAirPro-Light.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/CircularAirPro-Light.woff') format('woff'),
+  url('../fonts/CircularAirPro-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Circular Air Pro';
+  src: url('../fonts/CircularAirPro-Medium.woff2') format('woff2'),
+  url('../fonts/CircularAirPro-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Circular Air Pro';
+  src: url('../fonts/CircularAirPro-Bold.eot');
+  src: url('../fonts/CircularAirPro-Bold.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/CircularAirPro-Bold.woff') format('woff'),
+  url('../fonts/CircularAirPro-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Circular Air Pro';
+  src: url('../fonts/CircularAirPro-Book.eot');
+  src: url('../fonts/CircularAirPro-Book.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/CircularAirPro-Book.woff') format('woff'),
+  url('../fonts/CircularAirPro-Book.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 // General
 @gutter: 30px;
-@border-radius: 2px;
-@transition: all 0.2s ease-in-out;
-@box-shadow: 0 0 20px rgba(0,0,0,0.15);
+@gutterR: 1.875rem;
+@gutterE: 1.875em;
+@border-radius: 0.750rem;
+@transition: all 0.25s ease-in-out;
+@box-shadow: 0 6px 20px 0 rgba(44,51,75,0.07);
+@drop-shadow: drop-shadow(0 4px 10px rgba(20,22,44,0.08));
+@container-width: 1196px;
+@outer-container-width: 1440px;
 
 // Typography
-@font-family: helvetica, sans-serif;
+@font-family: 'Circular Air Pro', Helvetica, sans-serif;
 @line-height: 1.5;
 @font-size: 16px;
 
 // Colors
-@primary-color: #5076FF;
-@red: #FF7650;
-@blue: #5076FF;
-@teal: #00E6E1;
-@black: #09273E;
-@half-black: #9598A9;
-@light-grey: #FAFAFB;
-@grey: #D4D5D8;
+@primary-color: #4C8CFC;
+@secondary-color: #00E0EE;
+@tertiary-color: #F18121;
+@body-color: #FAFCFF;
+@heading-color: @text-color;
+@text-color: #09151C;
+@border-color: #EAEBEC;
+@red: #FD5F58;
+@black: #000;
+@light-grey: #9499A6;
+@lighter-grey: #F7F9FC;
+@grey: #586B7A;
 @white: #fff;
+
+@royalblue: #3A66E6;
+@malibu: #47D1FF;
+@conifer: #96E63A;
+@texasrose: #FFAE53;
+
+@success: #7CDE1B;
+@warning: #FFA700;
+@error: @red;
 
 // Responsive
 @desktop-max-width: 1200px;
@@ -29,7 +85,7 @@
 @phone-min-width: 320px;
 @desktop: ~"screen and (min-width: @{desktop-min-width})";
 @tablet-desktop: ~"screen and (min-width: @{tablet-min-width})";
-@tablet: ~"screen and (min-width: @{tablet-min-width} and max-width: @{tablet-max-width})";
+@tablet: ~"screen and (min-width: @{tablet-min-width}) and (max-width: @{tablet-max-width})";
 @phone-tablet: ~"screen and (max-width: @{tablet-max-width})";
 @phone: ~"screen and (max-width: @{phone-max-width})";
 @phone-small: ~"screen and (max-width: @{phone-min-width})";

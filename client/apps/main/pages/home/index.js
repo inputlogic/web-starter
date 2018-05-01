@@ -1,4 +1,4 @@
-import {map, range} from 'wasmuth'
+import {map} from 'wasmuth'
 import Helmet from 'preact-helmet'
 
 // Components
@@ -10,13 +10,11 @@ import {
   TextField,
   Checkbox
 } from '/project/elements/styled-form'
-import {Row, Column} from '/project/elements/grid'
-import Page from '/project/elements/page'
 
 const Home = ({url, modals = {}}) =>
-  <Page>
+  <div>
     <Helmet
-      title='My Title'
+      title='Web Starter | Home'
       meta={[
         {name: 'description', content: 'Helmet application'},
         {property: 'og:type', content: 'article'}
@@ -41,17 +39,7 @@ const Home = ({url, modals = {}}) =>
           </ul>
         </Dropdown>
       </div>
-      <Row><h2>Grid</h2></Row>
-      <Row>{range(1, 4).map((n) =>
-        <Column>
-          <div className='card'>{n}</div>
-        </Column>
-      )}</Row>
-      <Row>{range(4, 6).map((n) =>
-        <Column>
-          <div className='card'>{n}</div>
-        </Column>
-      )}</Row>
+
     </div>
 
     <div className='card spaced'>
@@ -92,6 +80,6 @@ const Home = ({url, modals = {}}) =>
         , ['fff', 'a7c', '09d', '411', '111'])}
       </Carousel>
     </div>
-  </Page>
+  </div>
 
 export default Home
