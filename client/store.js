@@ -4,12 +4,13 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 
 import {pathReducer, actions} from '/util/pathReducer'
 import withStateUtil from '/util/withState'
+import getStorageItem from '/util/getStorageItem'
 
 import {DEBUG} from '/settings'
 
 const initialState = {
-  token: window.localStorage.getItem('token'),
-  accountStatus: window.localStorage.getItem('accountStatus'),
+  token: getStorageItem('token'),
+  accountStatus: getStorageItem('accountStatus'),
   dropdowns: {},
   invalidatedRequests: {}
 }

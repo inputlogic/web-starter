@@ -1,4 +1,5 @@
 import {map, range} from 'wasmuth'
+import Helmet from 'preact-helmet'
 
 // Components
 import Carousel from '/project/elements/carousel'
@@ -14,6 +15,14 @@ import Page from '/project/elements/page'
 
 const Home = ({url, modals = {}}) =>
   <Page>
+    <Helmet
+      title='My Title'
+      meta={[
+        {name: 'description', content: 'Helmet application'},
+        {property: 'og:type', content: 'article'}
+      ]}
+    />
+
     <div className='intro' style='max-width: 640px; margin: 1rem auto;'>
       <h1>Hello World</h1>
       <div className='card elevated hover-scale'>

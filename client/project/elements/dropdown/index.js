@@ -14,23 +14,25 @@ const isDropdown = (el) =>
   (el.classList && el.classList.contains('dropdown-menu')) ||
   (el.classList && el.classList.contains('btn-dropdown'))
 
-document.body.addEventListener('click', (ev) => {
-  const dds = pipe(
-    pathOr({}, ['dropdowns']),
-    filter((val) => val),
-    Object.keys
-  )(getState())
-  if (!dds.length) {
-    return
-  }
-  let el = ev.target
-  if (isDropdown(el)) return
-  while (el.parentNode) {
-    el = el.parentNode
+try {
+  document.body.addEventListener('click', (ev) => {
+    const dds = pipe(
+      pathOr({}, ['dropdowns']),
+      filter((val) => val),
+      Object.keys
+    )(getState())
+    if (!dds.length) {
+      return
+    }
+    let el = ev.target
     if (isDropdown(el)) return
-  }
-  dispatch(set(['dropdowns'], {}))
-})
+    while (el.parentNode) {
+      el = el.parentNode
+      if (isDropdown(el)) return
+    }
+    dispatch(set(['dropdowns'], {}))
+  })
+} catch (_) {}
 
 export default withState(
   ({dropdowns}, {uid}) => {

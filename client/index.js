@@ -10,8 +10,6 @@ import logger from '/util/logger'
 window.W = wasmuth
 window.log = logger
 
-log.debug('@TODO: Please remove me.', true, 981923)
-
 const MainApp = () =>
   <div className='main-app-container' >
     <PageNotification />
@@ -20,4 +18,4 @@ const MainApp = () =>
     <Modals />
   </div>
 
-Preact.render(<MainApp />, document.body)
+Preact.render(<MainApp />, document.body, document.body.children[0])
