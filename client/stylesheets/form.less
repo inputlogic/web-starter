@@ -1,6 +1,20 @@
 @import (reference) 'variables.less';
 @import (reference) 'button.less';
 
+
+@-webkit-keyframes autofill {
+  to {
+    color: #666;
+    background: transparent;
+  }
+}
+
+input:-webkit-autofill {
+  -webkit-animation-name: autofill;
+  -webkit-animation-fill-mode: both;
+}
+
+
 form {
   margin-top: 1em;
 
