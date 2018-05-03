@@ -11,6 +11,17 @@ import {
   Checkbox
 } from '/project/elements/styled-form'
 
+import {watchPath, dispatch, remove} from '/store'
+
+watchPath(['nested', 'test'], (newVal, oldVal) =>
+  console.warn('nested', newVal, oldVal)
+)
+
+const removeNested = ev => {
+  ev.preventDefault()
+  dispatch(remove('nested.test'))
+}
+
 const Home = ({url, modals = {}}) =>
   <div>
     <Helmet
@@ -32,7 +43,7 @@ const Home = ({url, modals = {}}) =>
         <h2>Dropdown</h2>
         <Dropdown uid='food'>
           <ul>
-            <li><a href=''>Hotdog</a></li>
+            <li><a onClick={removeNested} href='#'>Hotdog</a></li>
             <li><a href=''>Cola</a></li>
             <li><a href=''>Fruit Smoothie</a></li>
             <li><a href=''>Dinasaur Egg</a></li>

@@ -12,7 +12,8 @@ const initialState = {
   token: getStorageItem('token'),
   accountStatus: getStorageItem('accountStatus'),
   dropdowns: {},
-  invalidatedRequests: {}
+  invalidatedRequests: {},
+  nested: {test: true}
 }
 
 export const store = createStore(
