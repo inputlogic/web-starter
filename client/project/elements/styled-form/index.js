@@ -3,3 +3,4 @@ export {SubmitButton} from '../form'
 
 export {TextField} from './text-field'
 export {Checkbox} from './checkbox'
+export {Select} from './select'

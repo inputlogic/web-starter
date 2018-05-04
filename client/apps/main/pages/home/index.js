@@ -8,7 +8,8 @@ import {
   Form,
   SubmitButton,
   TextField,
-  Checkbox
+  Checkbox,
+  Select
 } from '/project/elements/styled-form'
 
 const Home = ({url, modals = {}}) =>
@@ -51,6 +52,12 @@ const Home = ({url, modals = {}}) =>
         <TextField fancy type='password' label='Your Password' name='pass' rules={{min: 8}} />
 
         <Checkbox label='Subscibe to your newsletter?' name='newsletter' />
+
+        <Select name='country' >
+          <option value='' disabled>- Pick a country -</option>
+          <option value='canada'>Canada</option>
+          <option value='usa'>United Stats of America</option>
+        </Select>
 
         <SubmitButton className='btn'>Sign In</SubmitButton>
       </Form>

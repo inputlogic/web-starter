@@ -83,6 +83,7 @@ input,
 textarea {
   width: 100%;
   padding: .75em 1.125em;
+  margin-bottom: .75em;
   border: none;
   outline: none;
   border: 1px solid @border-color;
@@ -189,7 +190,7 @@ input.fancy-label + label {
 
     p {
       font-size: 14px;
-      color: @lighter-grey;
+      color: @light-grey;
       font-weight: normal;
 
     }
@@ -243,11 +244,11 @@ input.fancy-label + label {
 
 .checkbox.noLabel label {
   padding: 0;
+
   span {
     display: none;
   }
 }
-
 
 [type="checkbox"] {
   position: absolute;
@@ -262,8 +263,9 @@ input.fancy-label + label {
   font-weight: normal;
   font-size: 14px;
   letter-spacing: unset;
-  color: @lighter-grey;
+  color: @light-grey;
   margin: 0;
+  margin-bottom: 1.5em;
 }
 
 
@@ -403,6 +405,7 @@ input.fancy-label + label {
   border: solid 1px @border-color;
   border-radius: @border-radius;
   padding-right: 1.2rem;
+  margin-bottom: .75em;
 
   &.dark select {
     color: @text-color;
@@ -423,7 +426,7 @@ input.fancy-label + label {
   font-size: 1rem;
   font-weight: normal;
   font-family: @font-family;
-  color: @lighter-grey;
+  color: @text-color;
 }
 
 .select select::-ms-expand {
