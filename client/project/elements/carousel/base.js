@@ -1,7 +1,5 @@
 import {map} from 'wasmuth'
 
-import Link from '/project/elements/link'
-
 export default function render ({
   active,
   prev,
@@ -15,7 +13,7 @@ export default function render ({
   return <div className={`carousel-block carousel ${wrapperClass}`}>
     <div className='card-carousel-content row'>
       <nav className='nav prev'>
-        <Link to={prev} />
+        <button onClick={prev} />
       </nav>
       <div className='slides'>
         {map((c, idx) =>
@@ -27,7 +25,7 @@ export default function render ({
         , children)}
       </div>
       <nav className='nav next'>
-        <Link to={next} />
+        <button onClick={next} />
       </nav>
     </div>
   </div>
