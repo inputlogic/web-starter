@@ -3,6 +3,7 @@ import Helmet from 'preact-helmet'
 
 // Components
 import Carousel from '/project/elements/carousel'
+import Tooltip from '/project/elements/tooltip'
 import Dropdown from '/project/elements/dropdown'
 import {
   Form,
@@ -23,6 +24,37 @@ const Home = ({url, modals = {}}) =>
 
     <div className='intro' style='max-width: 640px; margin: 1rem auto;'>
       <h1>Hello World</h1>
+
+      <h2>Tooltips</h2>
+
+      <div className='demo-grid'>
+
+        <Tooltip className='inline' text='I am up' pos='up'>
+          <img src='/images/icon-question.png' alt='' />
+        </Tooltip>
+
+        <Tooltip className='inline' text='I am down' pos='down'>
+          <img src='/images/icon-question.png' alt='' />
+        </Tooltip>
+
+        <Tooltip className='inline' text='I am left' pos='left'>
+          <img src='/images/icon-question.png' alt='' />
+        </Tooltip>
+
+        <Tooltip className='inline' text='I am right' pos='right'>
+          <img src='/images/icon-question.png' alt='' />
+        </Tooltip>
+
+        <Tooltip className='inline' text='Small' pos='up' length='small'>
+          <img src='/images/icon-question.png' alt='' />
+        </Tooltip>
+
+        <Tooltip className='inline' text='Large' pos='up' length='large'>
+          <img src='/images/icon-question.png' alt='' />
+        </Tooltip>
+
+      </div>
+
       <div className='card elevated hover-scale'>
         <p>{url}</p>
         <a href='http://google.ca'>Google</a>
