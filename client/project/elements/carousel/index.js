@@ -6,7 +6,7 @@ import {dispatch, set, watchPath} from '/store'
 import render from './base'
 
 function init () {
-  this._uid = guid()
+  this._uid = this.props.uid || guid()
   this.state = {active: this.props.active || 0, width: 0}
   dispatch(set(['Carousel', this._uid], this.props.active || 0))
   watchPath(['Carousel', this._uid], (active) =>
@@ -31,31 +31,43 @@ function prev (ev) {
   dispatch(set(['Carousel', this._uid], n))
 }
 
+function setActive (idx) {
+  return ev => {
+    ev.preventDefault()
+    dispatch(set(['Carousel', this._uid], idx))
+  }
+}
+
 function getRef (ref) {
   if (!ref || this.ref) return
   this.ref = ref
   window.requestAnimationFrame(() => {
     const width = this.ref.offsetWidth
     const parent = this.ref.parentNode
+    const parentWidth = parent.offsetWidth
     const numFit = parent != null
       ? Math.max(0, Math.floor(parent.offsetWidth / width) - 1)
       : 0
-    this.setState({...this.state, width, numFit})
+    this.setState({...this.state, width, parentWidth, numFit})
   })
 }
 
 function getStyle (idx, active) {
   const {width} = this.state
+  console.log('getStyle', this.state.parentWidth)
   const style = idx === 0 && idx !== active
     ? `margin-left: -${width * active}px;`
     : ''
-  return style
+  return this.state.parentWidth != null
+    ? `${style} width: ${this.state.parentWidth}px;`
+    : style
 }
 
 export default compose(setNodeName('Carousel'), {
   init,
   next,
   prev,
+  setActive,
   getRef,
   getStyle,
   render

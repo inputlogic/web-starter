@@ -1,22 +1,21 @@
 @import (reference) 'variables.less';
 
 .carousel {
+  width: 100%;
   padding: 0 @gutter;
-  display: flex;
-  justify-content: center;
+  margin: 0 auto;
 
-  .card-carousel-content {
-    display: flex;
+  .carousel-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     overflow: visible;
-    flex-wrap: nowrap;
 
     .slides {
       display: flex;
       flex-wrap: nowrap;
       overflow: hidden;
       justify-content: flex-start;
-      width: 400px;
 
       > div {
         width: 100%;
@@ -37,20 +36,13 @@
       }
     }
   }
-}
 
-.carousel-btn {
-  background-repeat: no-repeat;
-  background-size: contain;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 32px;
-  height: 32px;
-  background-color: orange;
-  transition: @transition;
+  .carousel-dots {
+    width: auto;
+    margin: 1rem auto;
 
-  &:hover {
-    opacity: .7;
+    .level {
+      justify-content: center;
+    }
   }
 }

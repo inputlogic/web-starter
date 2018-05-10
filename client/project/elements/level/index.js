@@ -26,7 +26,7 @@ const Level = ({
   children,
   ...props
 }) =>
-  <div>
+  <div {...props}>
     {children.length > 0 &&
       <div class={cls({noPadding, halfPadding, notSpaced, withUnderline})}>
         {children}
