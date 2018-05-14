@@ -45,5 +45,21 @@
     .level {
       justify-content: center;
     }
+
+    button {
+      overflow: hidden;
+      width: 16px;
+      height: 16px;
+      border-radius: 16px;
+      background-color: @border-color;
+      border: 0;
+      text-indent: -9999px;
+      outline: none;
+      cursor: pointer;
+
+      &.active {
+        background-color: @primary-color;
+      }
+    }
   }
 }
