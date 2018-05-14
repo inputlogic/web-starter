@@ -53,14 +53,18 @@ function getRef (ref) {
 }
 
 function getStyle (idx, active) {
-  const {width} = this.state
-  console.log('getStyle', this.state.parentWidth)
-  const style = idx === 0 && idx !== active
-    ? `margin-left: -${width * active}px;`
+  const {parentWidth, width} = this.state
+  const style = parentWidth != null
+    ? `width: ${parentWidth}px;`
     : ''
-  return this.state.parentWidth != null
-    ? `${style} width: ${this.state.parentWidth}px;`
-    : style
+  if (active === 0 || idx >= active) {
+    return style
+  }
+  return `${style} margin-left: -${width}px;`
+}
+
+function getSlidesStyle () {
+  return `width: ${this.state.parentWidth * this.props.children.length}px;`
 }
 
 export default compose(setNodeName('Carousel'), {
@@ -70,5 +74,6 @@ export default compose(setNodeName('Carousel'), {
   setActive,
   getRef,
   getStyle,
+  getSlidesStyle,
   render
 })

@@ -11,19 +11,20 @@
     align-items: center;
     overflow: visible;
 
-    .slides {
-      display: flex;
-      flex-wrap: nowrap;
+    .slides-wrapper {
+      position: relative;
       overflow: hidden;
-      justify-content: flex-start;
 
-      > div {
-        width: 100%;
-        transition: all .2s ease-in-out;
+      .slides {
+        .carousel-slide {
+          width: 100%;
+          float: left;
+          transition: all .2s ease-in-out;
+          opacity: 0;
 
-        a {
-          text-decoration: none;
-          display: block;
+          &.active {
+            opacity: 1;
+          }
         }
       }
     }
