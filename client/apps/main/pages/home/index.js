@@ -74,9 +74,9 @@ const Home = ({url, modals = {}}) =>
     </div>
 
     <div className='spaced'>
-      <Carousel>
+      <Carousel withDots>
         {map((hex) =>
-          <img src={`http://www.placehold.it/400x300/${hex}/f44?text=${hex}`} />
+          <img src={`http://www.placehold.it/400x300/${hex}/f44?text=${hex}`} style='width: 100%;' />
         , ['fff', 'a7c', '09d', '411', '111'])}
       </Carousel>
     </div>

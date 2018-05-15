@@ -1,30 +1,30 @@
 @import (reference) 'variables.less';
 
 .carousel {
+  width: 100%;
   padding: 0 @gutter;
-  display: flex;
-  justify-content: center;
+  margin: 0 auto;
 
-  .card-carousel-content {
-    display: flex;
+  .carousel-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     overflow: visible;
-    flex-wrap: nowrap;
 
-    .slides {
-      display: flex;
-      flex-wrap: nowrap;
+    .slides-wrapper {
+      position: relative;
       overflow: hidden;
-      justify-content: flex-start;
-      width: 400px;
 
-      > div {
-        width: 100%;
-        transition: all .2s ease-in-out;
+      .slides {
+        .carousel-slide {
+          width: 100%;
+          float: left;
+          transition: all .2s ease-in-out;
+          opacity: 0;
 
-        a {
-          text-decoration: none;
-          display: block;
+          &.active {
+            opacity: 1;
+          }
         }
       }
     }
@@ -37,20 +37,29 @@
       }
     }
   }
-}
 
-.carousel-btn {
-  background-repeat: no-repeat;
-  background-size: contain;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 32px;
-  height: 32px;
-  background-color: orange;
-  transition: @transition;
+  .carousel-dots {
+    width: auto;
+    margin: 1rem auto;
 
-  &:hover {
-    opacity: .7;
+    .level {
+      justify-content: center;
+    }
+
+    button {
+      overflow: hidden;
+      width: 16px;
+      height: 16px;
+      border-radius: 16px;
+      background-color: @border-color;
+      border: 0;
+      text-indent: -9999px;
+      outline: none;
+      cursor: pointer;
+
+      &.active {
+        background-color: @primary-color;
+      }
+    }
   }
 }
