@@ -86,24 +86,29 @@ const performRequests = requests => new Promise((resolve, reject) => {
   }
 })
 
-const pollRequests = requests =>
-  map(
-    k => {
-      if (!requests[k]) {
-        return
-      }
-      if (typeof requests[k].poll === 'number') {
-        const id = pollRequest(requests[k].url, requests[k].poll)
-        return () => root.clearInterval(id)
-      } else if (typeof requests[k].poll === 'boolean') {
-        const id = pollRequest(requests[k].url, 5000)
-        return () => root.clearInterval(id)
-      } else {
-        return () => {}
-      }
-    },
-    Object.keys(requests)
-  )
+const pollRequests = requests => new Promise((resolve, reject) => {
+  if (typeof window === 'undefined') {
+    resolve([])
+  } else {
+    resolve(map(
+      k => {
+        if (!requests[k]) {
+          return
+        }
+        if (typeof requests[k].poll === 'number') {
+          const id = pollRequest(requests[k].url, requests[k].poll)
+          return () => root.clearInterval(id)
+        } else if (typeof requests[k].poll === 'boolean') {
+          const id = pollRequest(requests[k].url, 5000)
+          return () => root.clearInterval(id)
+        } else {
+          return () => {}
+        }
+      },
+      Object.keys(requests)
+    ))
+  }
+})
 
 const requestResults = requests => {
   const requestsState = getState().requests || {}
@@ -193,7 +198,11 @@ const singularRequest = (() => {
       return abort(url)
     } else {
       return new Promise((resolve, reject) => {
-        xhr.onload = () => resolve(abort(url))
+        if (xhr.readyState === XHR_READY_STATE.DONE) {
+          resolve(abort(url))
+        } else {
+          xhr.onload = () => resolve(abort(url))
+        }
       })
     }
   }
