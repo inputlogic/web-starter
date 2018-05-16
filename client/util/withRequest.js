@@ -1,4 +1,6 @@
+import asyncSeries from 'async/series'
 import {equal, map, path} from 'wasmuth'
+
 import {subscribe, getState, dispatch, update, remove} from '/store'
 import request, {getAuthHeader} from '/util/request'
 import compose from '/util/compose'
@@ -16,15 +18,24 @@ export const withRequest = mapper => Component => compose({
         : requests
 
       this._requests = requests
-      this._aborts = [...(this._aborts || []), ...performRequests(changedRequests)]
-      this._polls = [...(this._polls || []), ...pollRequests(changedRequests)]
 
-      if (requests) {
-        const newProps = requestResults(requests)
-        if (!equal(newProps, this.state._namespacedState)) {
-          this.setState({_namespacedState: newProps})
+      Promise.all([
+        performRequests(changedRequests),
+        pollRequests(changedRequests)
+      ]).then(([aborts, polls]) => {
+        this._aborts = [...(this._aborts || []), ...aborts]
+        this._polls = [...(this._polls || []), ...polls]
+
+        if (requests) {
+          const newProps = requestResults(requests)
+          if (!equal(newProps, this.state._namespacedState)) {
+            this.setState({_namespacedState: newProps})
+          }
         }
-      }
+      })
+      .catch(err => {
+        log.error(err)
+      })
     }
     syncState()
     this.unsubscribe = subscribe(syncState)
@@ -45,16 +56,35 @@ export const withRequest = mapper => Component => compose({
 
 export default withRequest
 
-const performRequests = requests =>
-  map(
-    k => {
+const performRequests = requests => new Promise((resolve, reject) => {
+  const requestKeys = Object.keys(requests)
+  if (typeof window !== 'undefined') {
+    resolve(map(
+      k => {
+        if (!requests[k]) {
+          return
+        }
+        return singularRequest(requests[k].url)
+      },
+      requestKeys
+    ))
+  } else {
+    asyncSeries(map(k => cb => {
       if (!requests[k]) {
-        return
+        cb(null, null) // no error, no value
+      } else {
+        singularRequest(requests[k].url)
+          .then(abort => cb(null, abort))
       }
-      return singularRequest(requests[k].url)
-    },
-    Object.keys(requests)
-  )
+    }, requestKeys), (err, results) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(results)
+      }
+    })
+  }
+})
 
 const pollRequests = requests =>
   map(
@@ -146,10 +176,12 @@ const singularRequest = (() => {
   }
   const makeRequest = (url, keepCount = true) => {
     const existing = requests[url]
+    let xhr
     if (!existing || (existing &&
         (existing.xhr.readyState === XHR_READY_STATE.DONE ||
         (existing.xhr.readyState === XHR_READY_STATE.UNSENT)))) {
-      const {xhr} = request({url, headers: getAuthHeader()})
+      const req = request({url, headers: getAuthHeader()})
+      xhr = req.xhr
       requests[url] = {
         xhr,
         count: ((existing || {}).count || 0) + (keepCount ? 1 : 0)
@@ -157,7 +189,13 @@ const singularRequest = (() => {
     } else {
       keepCount && requests[url].count ++
     }
-    return abort(url)
+    if (typeof window !== 'undefined') {
+      return abort(url)
+    } else {
+      return new Promise((resolve, reject) => {
+        xhr.onload = () => resolve(abort(url))
+      })
+    }
   }
   return makeRequest
 })()

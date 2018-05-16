@@ -80,7 +80,9 @@ http.createServer((request, response) => {
   )(routes)
   const match = W.find(W.where('path', request.url), routePairs)
   if (match !== undefined) {
-    const html = render(match.component({}))
+    console.log('match')
+    const Component = match.component
+    const html = render(<Component />)
     parsed.prerender = html
     const head = Helmet.rewind()
     parsed.prerenderHead = `
@@ -88,6 +90,7 @@ http.createServer((request, response) => {
       ${head.meta.toString()}
       ${head.link.toString()}
     `
+    console.log('parsed', parsed)
   }
 
   fs.readFile(filePath, (error, content) => {
