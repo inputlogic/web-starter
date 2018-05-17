@@ -10,6 +10,13 @@ export const invalidate = url =>
   dispatch(update(['invalidatedRequests'], {[url]: true}))
 
 export const withRequest = mapper => Component => compose({
+  init () {
+    const requests = mapper(getState(), this.props)
+    if (requests) {
+      const newProps = requestResults(requests)
+      this.state = {_namespacedState: newProps}
+    }
+  },
   componentWillMount () {
     const syncState = () => {
       const requests = mapper(getState(), this.props)

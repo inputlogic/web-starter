@@ -4,6 +4,8 @@ import render from 'preact-render-to-string'
 import Helmet from 'preact-helmet'
 
 import routes from '/allRoutes'
+import {store} from '/store'
+import {MainApp} from '/index'
 
 const url = require('url')
 const http = require('http')
@@ -14,9 +16,59 @@ const ejs = require('ejs')
 const queryString = require('query-string')
 const uaParser = require('ua-parser-js')
 
+global.W = W
+
 const port = process.env.PORT || 5000
 const indexFile = './public/index.html'
 const notSupportedFile = './public/unsupported.html'
+
+const requestsFinished = requests => {
+  const remaining = W.reject(req => req.result != null, Object.values(requests))
+  return remaining.length === 0
+}
+
+const renderReact = (parsed, request) => new Promise((resolve, reject) => {
+  const routePairs = W.pipe(W.toPairs, W.map(W.last))(routes)
+  const match = W.find(W.where('path', request.url), routePairs)
+  const updateParsed = (html) => {
+    parsed.prerender = html
+    const head = Helmet.rewind()
+    parsed.prerenderHead = `
+      ${head.title.toString()}
+      ${head.meta.toString()}
+      ${head.link.toString()}
+    `
+  }
+
+  if (match === undefined) {
+    resolve(parsed)
+  } else {
+    const html = render(<MainApp url={request.url} />)
+    const requests = W.pathOr({}, 'requests', store.getState())
+    if (Object.keys(requests).length) {
+      const maxTime = 2000
+      const delay = 100
+      let count = 0
+      let id = setInterval(() => {
+        const finished = requestsFinished(requests)
+        if (finished || count * delay >= maxTime) {
+          clearInterval(id)
+          if (!finished) {
+            updateParsed(html)
+            resolve(parsed)
+          } else {
+            updateParsed(render(<MainApp url={request.url} />))
+            resolve(parsed)
+          }
+        }
+        count++
+      }, delay)
+    } else {
+      updateParsed(html)
+      resolve(parsed)
+    }
+  }
+})
 
 const renderFile = file => (data, response) =>
   fs.readFile(file, {encoding: 'utf8'}, (_, content) => {
@@ -30,8 +82,6 @@ const renderFile = file => (data, response) =>
 
 const renderIndex = renderFile(indexFile)
 const renderUnsupported = renderFile(notSupportedFile)
-
-global.W = W
 
 http.createServer((request, response) => {
   const ua = uaParser(request.headers['user-agent'])
@@ -74,43 +124,27 @@ http.createServer((request, response) => {
 
   const contentType = mimeTypes[extname] || 'application/octet-stream'
 
-  const routePairs = W.pipe(
-    W.toPairs,
-    W.map(W.last)
-  )(routes)
-  const match = W.find(W.where('path', request.url), routePairs)
-  if (match !== undefined) {
-    console.log('match')
-    const Component = match.component
-    const html = render(<Component />)
-    parsed.prerender = html
-    const head = Helmet.rewind()
-    parsed.prerenderHead = `
-      ${head.title.toString()}
-      ${head.meta.toString()}
-      ${head.link.toString()}
-    `
-    console.log('parsed', parsed)
-  }
-
-  fs.readFile(filePath, (error, content) => {
-    if (error) {
-      if (error.code === 'ENOENT') {
-        renderIndex(parsed, response)
-      } else {
-        response.writeHead(500)
-        response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n')
-        response.end()
-      }
-    } else {
-      if (filePath === indexFile) {
-        renderIndex(parsed, response)
-      } else {
-        response.writeHead(200, { 'Content-Type': contentType })
-        response.end(content, 'utf-8')
-      }
-    }
-  })
+  renderReact(parsed, request)
+    .then(parsed => {
+      fs.readFile(filePath, (error, content) => {
+        if (error) {
+          if (error.code === 'ENOENT') {
+            renderIndex(parsed, response)
+          } else {
+            response.writeHead(500)
+            response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n')
+            response.end()
+          }
+        } else {
+          if (filePath === indexFile) {
+            renderIndex(parsed, response)
+          } else {
+            response.writeHead(200, { 'Content-Type': contentType })
+            response.end(content, 'utf-8')
+          }
+        }
+      })
+    })
 }).listen(port)
 
 console.log(`Server running at http://127.0.0.1:${port}/`)
