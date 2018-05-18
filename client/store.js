@@ -1,19 +1,23 @@
 import {createStore} from 'redux'
-import {watchStore} from 'wasmuth'
+import {watchStore, safeWindow} from 'wasmuth'
 import {composeWithDevTools} from 'redux-devtools-extension'
 
 import {pathReducer, actions} from '/util/pathReducer'
 import withStateUtil from '/util/withState'
-import getStorageItem from '/util/getStorageItem'
 
 import {DEBUG} from '/settings'
 
+const isClientSide = typeof window !== 'undefined'
+
 const initialState = {
-  token: getStorageItem('token'),
-  accountStatus: getStorageItem('accountStatus'),
+  token: safeWindow('localStorage.getItem', 'token'),
+  accountStatus: safeWindow('localStorage.getItem', 'accountStatus'),
   dropdowns: {},
   invalidatedRequests: {},
-  ...(typeof window !== 'undefined') ? window.__initialStore : {}
+  ...isClientSide ? window.__initialStore : {},
+  ...(DEBUG && isClientSide)
+    ? JSON.parse(safeWindow('localStorage.getItem', '__hmr') || '{}')
+    : {}
 }
 
 export const store = createStore(

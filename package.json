@@ -42,7 +42,7 @@
     "throttle-debounce": "1.0.1",
     "ua-parser-js": "0.7.18",
     "uglify-js-brunch": "2.10.0",
-    "wasmuth": "1.13.0",
+    "wasmuth": "1.13.1",
     "xmlhttprequest": "1.8.0"
   },
   "devDependencies": {

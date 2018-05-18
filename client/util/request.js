@@ -1,5 +1,4 @@
-import {request} from 'wasmuth'
-import getStorageItem from '/util/getStorageItem'
+import {request, safeWindow} from 'wasmuth'
 import {dispatch, set, getState} from '/store'
 import {DEBUG} from '/settings'
 
@@ -54,6 +53,6 @@ export default (args, options = {}) => {
 }
 
 export const getAuthHeader = () => {
-  const authToken = getStorageItem('token')
+  const authToken = safeWindow('localStorage.getItem', 'token')
   return authToken ? {Authorization: `Token ${authToken}`} : {}
 }
