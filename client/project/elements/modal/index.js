@@ -4,13 +4,15 @@ import BaseModal from './base'
 
 // Watch for an open modal, if so add a class to body to prevent
 // scrolling behind the modal.
-watchPath(['modal'], (modal, oldmodal) => {
-  if (modal && modal !== oldmodal) {
-    document.body.classList.add('modal-open')
-  } else {
-    document.body.classList.remove('modal-open')
-  }
-})
+if (typeof document !== 'undefined') {
+  watchPath(['modal'], (modal, oldmodal) => {
+    if (modal && modal !== oldmodal) {
+      document.body.classList.add('modal-open')
+    } else {
+      document.body.classList.remove('modal-open')
+    }
+  })
+}
 
 // Watch for URL change, if so close all modals.
 watchPath(['route'], (route, oldRoute = {}) => {

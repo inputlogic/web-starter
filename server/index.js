@@ -13,7 +13,7 @@ const fs = require('fs')
 const path = require('path')
 
 const ejs = require('ejs')
-const queryString = require('query-string')
+const queryString = require('querystringify')
 const uaParser = require('ua-parser-js')
 
 global.W = W
@@ -38,6 +38,7 @@ const renderReact = (parsed, request) => new Promise((resolve, reject) => {
       ${head.meta.toString()}
       ${head.link.toString()}
     `
+    parsed.state = JSON.stringify(store.getState())
   }
 
   if (match === undefined) {
@@ -76,6 +77,7 @@ const renderFile = file => (data, response) =>
     response.end(ejs.render(content, {
       prerender: '',
       prerenderHead: data.prerenderHead || '<title>Web-Starter</title>',
+      state: {},
       ...data
     }), 'utf-8')
   })

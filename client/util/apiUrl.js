@@ -1,4 +1,4 @@
-import queryString from 'query-string'
+import queryString from 'querystringify'
 import {reduce} from 'wasmuth'
 
 import {API_URL, PAGE_SIZE} from '/settings'

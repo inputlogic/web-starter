@@ -1,5 +1,4 @@
-import check from 'check-arg-types'
-import queryString from 'query-string'
+import queryString from 'querystringify'
 import {
   map,
   reduce,
@@ -8,6 +7,7 @@ import {
   pipe,
   path,
   toPairs,
+  toType,
   safeWindow
 } from 'wasmuth'
 
@@ -17,8 +17,6 @@ import {compose, setNodeName} from '/util/compose'
 
 import {set, dispatch, getState} from '/store'
 import routes from '/allRoutes'
-
-const toType = check.prototype.toType
 
 /**
  * Add preact-router props into the atom state

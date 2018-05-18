@@ -1,7 +1,4 @@
-import check from 'check-arg-types'
-import {path} from 'wasmuth'
-
-const toType = check.prototype.toType
+import {path, toType} from 'wasmuth'
 
 export default function parseResults (res) {
   const result = path('result', res)

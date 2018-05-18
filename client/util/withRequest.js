@@ -1,9 +1,9 @@
-import asyncSeries from 'async/series'
 import {equal, map, path} from 'wasmuth'
 
 import {subscribe, getState, dispatch, update, remove} from '/store'
 import request, {getAuthHeader} from '/util/request'
 import compose from '/util/compose'
+import runSerial from '/util/runSerial'
 import root from '/util/root'
 
 export const invalidate = url =>
@@ -14,7 +14,7 @@ export const withRequest = mapper => Component => compose({
     const requests = mapper(getState(), this.props)
     if (requests) {
       const newProps = requestResults(requests)
-      this.state = {_namespacedState: newProps}
+      this.state = {_namespacedState: newProps, _firstSync: false}
     }
   },
   componentWillMount () {
@@ -76,20 +76,17 @@ const performRequests = requests => new Promise((resolve, reject) => {
       requestKeys
     ))
   } else {
-    asyncSeries(map(k => cb => {
+    const tasks = map(k => () => new Promise((resolve) => {
       if (!requests[k]) {
-        cb(null, null) // no error, no value
+        resolve()
       } else {
         singularRequest(requests[k].url)
-          .then(abort => cb(null, abort))
+          .then(abort => resolve(abort))
       }
-    }, requestKeys), (err, results) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(results)
-      }
-    })
+    }), requestKeys)
+    runSerial(tasks)
+      .then(results => resolve(results))
+      .catch(err => reject(err))
   }
 })
 
@@ -182,7 +179,7 @@ const singularRequest = (() => {
   const abort = (url) => () => {
     const request = requests[url]
     request.count = request.count - 1
-    if (request.count === 0) {
+    if (request.count === 0 && request.xhr) {
       request.xhr.abort()
     }
   }
@@ -192,7 +189,10 @@ const singularRequest = (() => {
     if (!existing || (existing &&
         (existing.xhr.readyState === XHR_READY_STATE.DONE ||
         (existing.xhr.readyState === XHR_READY_STATE.UNSENT)))) {
-      const req = request({url, headers: getAuthHeader()})
+      const req = request(
+        {url, headers: getAuthHeader()},
+        {maxAge: 5000}
+      )
       xhr = req.xhr
       requests[url] = {
         xhr,

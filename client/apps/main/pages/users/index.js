@@ -8,7 +8,6 @@ export default connect({
     }
   })
 })(props =>
-  console.log('users') ||
   Base({
     url: 'https://jsonplaceholder.typicode.com/users',
     ...props
