@@ -3,12 +3,10 @@ import {
   pathSet,
   merge,
   without,
-  last
+  last,
+  toType
 } from 'wasmuth'
 
-import check from 'check-arg-types'
-
-const toType = check.prototype.toType
 const TYPES = ['ATOM_SET', 'ATOM_UPDATE', 'ATOM_REMOVE', 'ATOM_BATCH']
 
 function _set (path, payload, state) {

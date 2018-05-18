@@ -1,12 +1,9 @@
-import check from 'check-arg-types'
-import {equal, filter, deepClone} from 'wasmuth'
+import {equal, filter, deepClone, toType} from 'wasmuth'
 
 import {compose, setNodeName} from '/util/compose'
 
 import {subscribe, getState} from '/store'
 import {DEBUG} from '/settings'
-
-const toType = check.prototype.toType
 
 const onlyDupes = (a1, a2) => filter(i => a1.indexOf(i) > -1, a2)
 

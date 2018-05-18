@@ -12,7 +12,8 @@ const initialState = {
   token: getStorageItem('token'),
   accountStatus: getStorageItem('accountStatus'),
   dropdowns: {},
-  invalidatedRequests: {}
+  invalidatedRequests: {},
+  ...(typeof window !== 'undefined') ? window.__initialStore : {}
 }
 
 export const store = createStore(

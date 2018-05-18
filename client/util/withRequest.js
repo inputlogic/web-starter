@@ -1,13 +1,22 @@
 import {equal, map, path} from 'wasmuth'
+
 import {subscribe, getState, dispatch, update, remove} from '/store'
 import request, {getAuthHeader} from '/util/request'
 import compose from '/util/compose'
+import runSerial from '/util/runSerial'
 import root from '/util/root'
 
 export const invalidate = url =>
   dispatch(update(['invalidatedRequests'], {[url]: true}))
 
 export const withRequest = mapper => Component => compose({
+  init () {
+    const requests = mapper(getState(), this.props)
+    if (requests) {
+      const newProps = requestResults(requests)
+      this.state = {_namespacedState: newProps, _firstSync: false}
+    }
+  },
   componentWillMount () {
     const syncState = () => {
       const requests = mapper(getState(), this.props)
@@ -16,15 +25,24 @@ export const withRequest = mapper => Component => compose({
         : requests
 
       this._requests = requests
-      this._aborts = [...(this._aborts || []), ...performRequests(changedRequests)]
-      this._polls = [...(this._polls || []), ...pollRequests(changedRequests)]
 
-      if (requests) {
-        const newProps = requestResults(requests)
-        if (!equal(newProps, this.state._namespacedState)) {
-          this.setState({_namespacedState: newProps})
+      Promise.all([
+        performRequests(changedRequests),
+        pollRequests(changedRequests)
+      ]).then(([aborts, polls]) => {
+        this._aborts = [...(this._aborts || []), ...aborts]
+        this._polls = [...(this._polls || []), ...polls]
+
+        if (requests) {
+          const newProps = requestResults(requests)
+          if (!equal(newProps, this.state._namespacedState)) {
+            this.setState({_namespacedState: newProps})
+          }
         }
-      }
+      })
+      .catch(err => {
+        log.error(err)
+      })
     }
     syncState()
     this.unsubscribe = subscribe(syncState)
@@ -45,35 +63,56 @@ export const withRequest = mapper => Component => compose({
 
 export default withRequest
 
-const performRequests = requests =>
-  map(
-    k => {
+const performRequests = requests => new Promise((resolve, reject) => {
+  const requestKeys = Object.keys(requests)
+  if (typeof window !== 'undefined') {
+    resolve(map(
+      k => {
+        if (!requests[k]) {
+          return
+        }
+        return singularRequest(requests[k].url)
+      },
+      requestKeys
+    ))
+  } else {
+    const tasks = map(k => () => new Promise((resolve) => {
       if (!requests[k]) {
-        return
-      }
-      return singularRequest(requests[k].url)
-    },
-    Object.keys(requests)
-  )
-
-const pollRequests = requests =>
-  map(
-    k => {
-      if (!requests[k]) {
-        return
-      }
-      if (typeof requests[k].poll === 'number') {
-        const id = pollRequest(requests[k].url, requests[k].poll)
-        return () => root.clearInterval(id)
-      } else if (typeof requests[k].poll === 'boolean') {
-        const id = pollRequest(requests[k].url, 5000)
-        return () => root.clearInterval(id)
+        resolve()
       } else {
-        return () => {}
+        singularRequest(requests[k].url)
+          .then(abort => resolve(abort))
       }
-    },
-    Object.keys(requests)
-  )
+    }), requestKeys)
+    runSerial(tasks)
+      .then(results => resolve(results))
+      .catch(err => reject(err))
+  }
+})
+
+const pollRequests = requests => new Promise((resolve, reject) => {
+  if (typeof window === 'undefined') {
+    resolve([])
+  } else {
+    resolve(map(
+      k => {
+        if (!requests[k]) {
+          return
+        }
+        if (typeof requests[k].poll === 'number') {
+          const id = pollRequest(requests[k].url, requests[k].poll)
+          return () => root.clearInterval(id)
+        } else if (typeof requests[k].poll === 'boolean') {
+          const id = pollRequest(requests[k].url, 5000)
+          return () => root.clearInterval(id)
+        } else {
+          return () => {}
+        }
+      },
+      Object.keys(requests)
+    ))
+  }
+})
 
 const requestResults = requests => {
   const requestsState = getState().requests || {}
@@ -140,16 +179,21 @@ const singularRequest = (() => {
   const abort = (url) => () => {
     const request = requests[url]
     request.count = request.count - 1
-    if (request.count === 0) {
+    if (request.count === 0 && request.xhr) {
       request.xhr.abort()
     }
   }
   const makeRequest = (url, keepCount = true) => {
     const existing = requests[url]
+    let xhr
     if (!existing || (existing &&
         (existing.xhr.readyState === XHR_READY_STATE.DONE ||
         (existing.xhr.readyState === XHR_READY_STATE.UNSENT)))) {
-      const {xhr} = request({url, headers: getAuthHeader()})
+      const req = request(
+        {url, headers: getAuthHeader()},
+        {maxAge: 5000}
+      )
+      xhr = req.xhr
       requests[url] = {
         xhr,
         count: ((existing || {}).count || 0) + (keepCount ? 1 : 0)
@@ -157,7 +201,17 @@ const singularRequest = (() => {
     } else {
       keepCount && requests[url].count ++
     }
-    return abort(url)
+    if (typeof window !== 'undefined') {
+      return abort(url)
+    } else {
+      return new Promise((resolve, reject) => {
+        if (xhr.readyState === XHR_READY_STATE.DONE) {
+          resolve(abort(url))
+        } else {
+          xhr.onload = () => resolve(abort(url))
+        }
+      })
+    }
   }
   return makeRequest
 })()

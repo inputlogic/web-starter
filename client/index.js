@@ -9,18 +9,22 @@ import Guide from '/apps/guide'
 
 import logger from '/util/logger'
 
-window.W = wasmuth
-window.log = logger
+if (typeof window !== 'undefined') {
+  window.W = wasmuth
+  window.log = logger
+}
 
-const MainApp = () =>
+export const MainApp = (props) =>
   <div className='main-app-container' >
     <PageNotification />
 
-    <Main />
-    <Guide />
+    <Main {...props} />
+    <Guide {...props} />
 
     <NotFound />
     <Modals />
   </div>
 
-Preact.render(<MainApp />, document.body, document.body.children[0])
+if (typeof window !== 'undefined') {
+  Preact.render(<MainApp />, document.body, document.body.children[0])
+}

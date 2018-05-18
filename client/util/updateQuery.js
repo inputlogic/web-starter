@@ -1,4 +1,4 @@
-import queryString from 'query-string'
+import queryString from 'querystringify'
 
 // @TODO: This does not preserve order of search parms. This may lead to
 // withRequests urls not matching because:

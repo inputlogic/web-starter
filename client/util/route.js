@@ -1,5 +1,4 @@
-import check from 'check-arg-types'
-import queryString from 'query-string'
+import queryString from 'querystringify'
 import {
   map,
   reduce,
@@ -7,7 +6,9 @@ import {
   equal,
   pipe,
   path,
-  toPairs
+  toPairs,
+  toType,
+  safeWindow
 } from 'wasmuth'
 
 import PreactRouter from 'preact-router'
@@ -16,8 +17,6 @@ import {compose, setNodeName} from '/util/compose'
 
 import {set, dispatch, getState} from '/store'
 import routes from '/allRoutes'
-
-const toType = check.prototype.toType
 
 /**
  * Add preact-router props into the atom state
@@ -34,7 +33,7 @@ export const Route = compose(setNodeName('Route'), {
     const currentValues = getState().route
     const newValues = {
       args: newProps.matches,
-      url: window.location.pathname,
+      url: safeWindow('location.pathname'),
       name: newProps.name
     }
     if (!equal(currentValues, newValues)) {
@@ -50,9 +49,9 @@ export const Route = compose(setNodeName('Route'), {
     this.updateState(newProps)
   },
   componentDidUpdate () {
-    const {hash} = window.location
+    const hash = safeWindow('location.hash')
     if (hash !== '') {
-      window.requestAnimationFrame(() => {
+      safeWindow('requestAnimationFrame', () => {
         const id = hash.replace('#', '')
         const element = document.getElementById(id)
         element && element.scrollIntoView()
@@ -71,14 +70,14 @@ export const Route = compose(setNodeName('Route'), {
     }
     const type = toType(Component)
     if (type === 'function') {
-      window.requestAnimationFrame(() => window.scrollTo(0, 0))
+      safeWindow('requestAnimationFrame', () => safeWindow('scrollTo', 0, 0))
       return <Component />
     } else if (type === 'object') {
       const paths = toPairs(matches)
       const match = find(p => path(p, Component), paths)
       if (match) {
         const Match = path(match, Component)
-        window.requestAnimationFrame(() => window.scrollTo(0, 0))
+        safeWindow('requestAnimationFrame', () => safeWindow('scrollTo', 0, 0))
         return <Match />
       }
     }
@@ -92,9 +91,9 @@ export const Route = compose(setNodeName('Route'), {
  *   the current route component will unmount and the new one will mount.
  */
 export const Router = pipe(
-  ({routes}) => ({keys: Object.keys(routes), routes}),
-  ({keys, routes}) =>
-    <PreactRouter>
+  ({routes, url}) => ({keys: Object.keys(routes), routes, url}),
+  ({keys, routes, url}) =>
+    <PreactRouter url={url}>
       {map((name) =>
         <Route name={name} key={`route-${name}`} {...routes[name]} />
       , keys)}

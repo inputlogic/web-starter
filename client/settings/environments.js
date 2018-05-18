@@ -1,7 +1,4 @@
-import {find, some, safeWindow} from 'wasmuth'
-import check from 'check-arg-types'
-
-const toType = check.prototype.toType
+import {find, some, toType, safeWindow} from 'wasmuth'
 
 const environments = {
   development: [

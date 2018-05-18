@@ -1,32 +1,7 @@
-import check from 'check-arg-types'
-import toCamelCase from 'to-camel-case'
-import toSnakeCase from 'to-snake-case'
-import {
-  request,
-  pipe,
-  toPairs,
-  fromPairs,
-  map
-} from 'wasmuth'
+import {request} from 'wasmuth'
 
 import {dispatch, set} from '/store'
 import {API_URL} from '/settings'
-
-const toType = check.prototype.toType
-
-const caseMapper = (fn) => pipe(
-  toPairs,
-  map(([k, v]) => ([
-    fn(k),
-    toType(v) === 'object'
-      ? caseMapper(fn)(v)
-      : v
-  ])),
-  fromPairs
-)
-
-const mapCamelCase = caseMapper(toCamelCase)
-export const mapSnakeCase = caseMapper(toSnakeCase)
 
 const xhr = window.XMLHttpRequest
 const nativeOpen = xhr.prototype.open
@@ -75,22 +50,6 @@ export function login (username, password) {
   return post('auth', {data: {username, password}})
 }
 
-export function getSignedFile (file) {
-  return post(`files`, {
-    headers: getAuthHeader(),
-    mapResponse: false
-  })
-}
-
-export function uploadFile (file, s3Data) {
-  let formData = new window.FormData()
-  for (const key in s3Data.fields) {
-    formData.append(key, s3Data.fields[key])
-  }
-  formData.append('file', file)
-  return makeExternalRequest(s3Data.url, {data: formData, method: 'POST'})
-}
-
 // Base request functions
 
 export function get (endpoint, opts = {}) {
@@ -129,17 +88,7 @@ export function remove (endpoint, opts = {}) {
 
 // Private functions
 
-function makeExternalRequest (url, opts = {}) {
-  const {method, data: body} = opts
-  return new Promise((resolve, reject) =>
-    window.fetch(url, {method, body})
-      .then(res => resolve(res))
-      .catch(e => console.error(e) || reject(e))
-  )
-}
-
 function makeRequest (endpoint, opts = {}) {
-  if (opts.mapResponse === undefined) opts.mapResponse = true
   if (endpoint[0] === '/') endpoint.slice(1)
   const {promise, xhr} = request({
     ...opts,
@@ -148,19 +97,11 @@ function makeRequest (endpoint, opts = {}) {
   return new Promise((resolve, reject) => {
     promise
       .then(res => {
-        if (!res || !opts.mapResponse) {
-          resolve(res, xhr)
-        } else {
-          let mapped = (toType(res) === 'array')
-            ? map(mapCamelCase, res)
-            : mapCamelCase(res)
-          if (mapped.results) {
-            mapped.results = map(mapCamelCase, mapped.results)
-          }
-          resolve(mapped, xhr)
-        }
+        resolve(res, xhr)
       })
-      .catch(() => reject(safelyParseJson(xhr.responseText)))
+      .catch(() => {
+        reject(safelyParseJson(xhr.responseText))
+      })
   })
 }
 
