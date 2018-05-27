@@ -42,13 +42,11 @@ export const Route = compose(setNodeName('Route'), {
       dispatch(set('dropdowns', {}))
     }
   },
-  componentWillMount () {
+  init () {
     this.updateState(this.props)
   },
-  componentWillUpdate (newProps) {
-    this.updateState(newProps)
-  },
   componentDidUpdate () {
+    this.updateState(this.props)
     const hash = safeWindow('location.hash')
     if (hash !== '') {
       safeWindow('requestAnimationFrame', () => {

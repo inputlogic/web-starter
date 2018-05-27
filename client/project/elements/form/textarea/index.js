@@ -9,7 +9,7 @@ export const TextArea = withState(
   'TextArea',
   ({forms = {}}, {formName, name}) => ({value: path([formName, name], forms)})
 )(compose({
-  componentWillMount () {
+  init () {
     this.setFocus = (() => {
       var done = false
       return (ref) => {

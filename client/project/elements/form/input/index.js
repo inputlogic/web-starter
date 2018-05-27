@@ -40,7 +40,7 @@ export const Input = withState(
   'Input',
   ({forms = {}}, {formName, name}) => ({stateValue: path([formName, name], forms)})
 )(compose({
-  componentWillMount () {
+  init () {
     this.setFocus = (() => {
       var done = false
       return (ref) => {

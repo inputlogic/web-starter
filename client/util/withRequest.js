@@ -16,8 +16,6 @@ export const withRequest = mapper => Component => compose({
       const newProps = requestResults(requests)
       this.state = {_namespacedState: newProps, _firstSync: false}
     }
-  },
-  componentWillMount () {
     const syncState = () => {
       const requests = mapper(getState(), this.props)
       const changedRequests = this._requests

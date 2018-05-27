@@ -47,7 +47,7 @@ const updateProps = (children, formName) => {
 }
 
 export const Form = compose({
-  componentWillMount () {
+  init () {
     this.props.initialData && dispatch(set(
       ['forms', this.props.name],
       this.props.initialData
