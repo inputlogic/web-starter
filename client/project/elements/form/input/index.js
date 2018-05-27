@@ -56,6 +56,7 @@ export const Input = withState(
     type = 'text',
     trackFocus = false,
     trackOnInput = false,
+    trim = false,
     value,
     stateValue,
     focus,
@@ -65,6 +66,14 @@ export const Input = withState(
     !formName && log.warning('Formname not set for Input', name)
     type === 'checkbox' && !value && log.warning('Value not set for checkbox', name)
     type === 'radio' && !value && log.warning('Value not set for radio', name)
+
+    const dispatchTextValue = ev => {
+      dispatch(set(
+        `forms.${formName}.${name}`,
+        trim ? (ev.target.value || '').trim() : ev.target.value
+      ))
+    }
+
     return Base({
       onChange: ev => {
         ev.preventDefault()
@@ -74,12 +83,12 @@ export const Input = withState(
             addOrRemove(formName, name, value)
           ))
         } else if (type === 'radio' || !trackOnInput) {
-          dispatch(set(['forms', formName, name], ev.target.value))
+          dispatchTextValue(ev)
         }
       },
       onInput: throttle(200, ev => {
         if (trackOnInput) {
-          dispatch(set(['forms', formName, name], ev.target.value))
+          dispatchTextValue(ev)
         }
       }, false),
       onFocus: ev => {
