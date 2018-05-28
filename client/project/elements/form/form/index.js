@@ -68,14 +68,16 @@ export const Form = compose({
         ev.preventDefault()
         const data = W.path(['forms', name], getState())
         const errors = validate(data, {...validations, ...fieldsToValidate})
+        const hasError = W.some(x => x, errors)
         dispatch(set(['formErrors', name], errors))
-        if (!handleValidationErrors && W.some(x => x, errors)) {
+        if (!handleValidationErrors && hasError) {
           return
         }
         dispatch(set(['formState', name, 'submitting'], true))
         const promise = onSubmit({
           data,
-          errors
+          errors,
+          hasError
         })
         if (!promise || !promise.then) {
           log.warning(`onSubmit for Form "${name}" does not return a Promise!`)
