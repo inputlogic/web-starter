@@ -22,7 +22,7 @@ export default (nodeName, mapper) => {
     nodeName = 'Mapper'
   }
   return Component => compose(setNodeName(nodeName), {
-    componentWillMount () {
+    init () {
       const syncState = () => {
         const newProps = mapper(getState(), this.props)
         if (!equal(newProps, this.state._namespacedState)) {
