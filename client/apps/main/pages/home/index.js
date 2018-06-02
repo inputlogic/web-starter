@@ -2,6 +2,7 @@ import {map} from 'wasmuth'
 import Helmet from 'preact-helmet'
 
 // Components
+import {DynamicText, Dynamic} from '/project/elements/dynamic'
 import Carousel from '/project/elements/carousel'
 import Dropdown from '/project/elements/dropdown'
 import {
@@ -23,6 +24,12 @@ const Home = ({url, modals = {}}) =>
 
     <div className='intro' style='max-width: 640px; margin: 1rem auto;'>
       <h1>Hello World</h1>
+      <h2><DynamicText id='secondary-header' >Wicked</DynamicText></h2>
+      <div>
+        <Dynamic id='main-image' default='/images/icon-question.png' >
+          {({value}) => <img src={value} />}
+        </Dynamic>
+      </div>
       <div className='card elevated hover-scale'>
         <p>{url}</p>
         <a href='http://google.ca'>Google</a>

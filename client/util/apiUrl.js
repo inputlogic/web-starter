@@ -11,7 +11,7 @@ import {API_URL, PAGE_SIZE} from '/settings'
  *   post: 'posts/:id'
  */
 const API_PATHS = {
-
+  'content': 'content/'
 }
 
 export default (name, {args = {}, queries = {}, page} = {}) => {
