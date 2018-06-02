@@ -55,7 +55,7 @@ const Home = ({url, modals = {}}) =>
         <h2>Sign In</h2>
         <p>Sign in to your account below.</p>
 
-        <TextField fancy focus trim type='email' label='Your Email' name='email' />
+        <TextField fancy trim type='email' label='Your Email' name='email' />
         <TextField fancy type='password' label='Your Password' name='pass' rules={{min: 8}} />
 
         <Checkbox label='Subscibe to your newsletter?' name='newsletter' />

@@ -3,7 +3,7 @@ import {dispatch, set} from '/store'
 import connect from '/util/connect'
 import apiUrl from '/util/apiUrl'
 import request from '/util/request'
-import cached from '/contentCache'
+import cached from '/../public/contentCache'
 import Tooltip from '/project/elements/tooltip'
 
 export const normalize = contentResponse =>

@@ -11,7 +11,7 @@ export default () => {
     }
     const content = normalize(JSON.parse(body))
     fs.writeFile(
-      'client/contentCache.js',
+      'public/contentCache.js',
       'export default ' + JSON.stringify(content),
       'utf8',
       (err) => {
