@@ -24,7 +24,8 @@ const Home = ({url, modals = {}}) =>
 
     <div className='intro' style='max-width: 640px; margin: 1rem auto;'>
       <h1>Hello World</h1>
-      <h2><DynamicText id='secondary-header' >Wicked</DynamicText></h2>
+      <h2><DynamicText id='secondary-header' >Cool</DynamicText></h2>
+      <h3><DynamicText id='tertiary-header' >Hi</DynamicText></h3>
       <div>
         <Dynamic id='main-image' default='/images/icon-question.png' >
           {({value}) => <img src={value} />}

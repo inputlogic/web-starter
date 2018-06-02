@@ -1,1 +1,1 @@
-export default {"home":{"secondary-header":{"id":1,"value":"Awesome","page":"home","identifier":"secondary-header"},"main-image":{"id":2,"value":"/images/icon-question.png","page":"home","identifier":"main-image"}}}
+export default {"home":{"secondary-header":{"id":1,"value":"Swell","page":"home","identifier":"secondary-header"},"main-image":{"id":2,"value":"/images/icon-question.png","page":"home","identifier":"main-image"}}}
