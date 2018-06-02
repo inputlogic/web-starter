@@ -80,7 +80,7 @@ const renderFile = file => (data, response) =>
     response.end(ejs.render(content, {
       prerender: '',
       prerenderHead: data.prerenderHead || '<title>Web-Starter</title>',
-      state: {},
+      state: '{}',
       ...data
     }), 'utf-8')
   })

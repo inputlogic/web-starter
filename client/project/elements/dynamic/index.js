@@ -4,12 +4,13 @@ import connect from '/util/connect'
 import apiUrl from '/util/apiUrl'
 import request from '/util/request'
 import cached from '/contentCache'
+import Tooltip from '/project/elements/tooltip'
 
 export const normalize = contentResponse =>
   W.reduce(
     (acc, c) => ({
       ...acc,
-      [c.page]: {[c.identifier]: c.value, ...(acc[c.page] || {})}
+      [c.page]: {[c.identifier]: c, ...(acc[c.page] || {})}
     }),
     {},
     contentResponse.results
@@ -23,12 +24,8 @@ promise.then(res => {
   ))
 })
 
-// const cached = {}
-console.log(cached)
-
 const sentDynamicValues = {}
 const postDynamicValue = (page, id, value) => {
-  console.log('hi')
   if (W.path([page, id], sentDynamicValues)) {
     return
   }
@@ -49,15 +46,35 @@ export const DynamicText = connect({
   withState: state => {
     const pageName = state.route.name
     return {
+      editMode: W.path('route.args.editMode', state) === 'true',
       content: W.path(['requests', apiUrl('content'), 'result'], state),
       pageName
     }
   }
-})(({content, id, children, pageName}) => {
+})(({content, id, children, pageName, editMode}) => {
   const page = (content || {})[pageName]
-  const value = (page || {})[id] || W.path([pageName, id], cached) || children
+  const value = W.path([id, 'value'], page || {}) || W.path([pageName, id, 'value'], cached) || children
   if (content && (!page || !page[id])) {
     postDynamicValue(pageName, id, children[0])
+  }
+  if (editMode) {
+    let url
+    if (page && page[id]) {
+      url = apiUrl('contentAdmin', {args: {id: page[id].id}})
+    } else {
+      url = apiUrl('contentsAdmin')
+    }
+    return (
+      <a href={url} target='_blank' >
+        <Tooltip
+          className='inline'
+          text={`${id} ${pageName}`}
+          pos='up'
+        >
+          {value}
+        </Tooltip>
+      </a>
+    )
   }
   return value
 })
@@ -66,19 +83,39 @@ export const Dynamic = connect({
   withState: state => {
     const pageName = state.route.name
     return {
+      editMode: W.path('route.args.editMode', state) === 'true',
       content: W.path(['requests', apiUrl('content'), 'result'], state),
       pageName
     }
   }
-})(({content, id, default: initial, children, pageName}) => {
+})(({content, id, default: initial, children, pageName, editMode}) => {
   const func = children[0]
   if (typeof func !== 'function') {
     console.warn('Dynamic expects a function as the only child.')
   }
   const page = (content || {})[pageName]
-  const value = (page || {})[id] || W.path([pageName, id], cached) || initial
+  const value = W.path([id, 'value'], page || {}) || W.path([pageName, id, 'value'], cached) || children
   if (content && (!page || !page[id])) {
     postDynamicValue(pageName, id, initial)
+  }
+  if (editMode) {
+    let url
+    if (page && page[id]) {
+      url = apiUrl('contentAdmin', {args: {id: page[id].id}})
+    } else {
+      url = apiUrl('contentsAdmin')
+    }
+    return (
+      <a href={url} target='_blank' >
+        <Tooltip
+          className='inline'
+          text={`${id} ${pageName}`}
+          pos='up'
+        >
+          {func({value})}
+        </Tooltip>
+      </a>
+    )
   }
   return func({value})
 })
