@@ -1,8 +1,8 @@
 import {request as baseRequest} from 'wasmuth'
+import {dispatch, set} from '/store'
 import connect from '/util/connect'
 import apiUrl from '/util/apiUrl'
 import request from '/util/request'
-import {dispatch, set} from '/store'
 
 const {promise} = baseRequest({url: apiUrl('content')})
 promise.then(res => {
