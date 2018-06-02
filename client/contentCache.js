@@ -1,0 +1,1 @@
+export default {"home":{"secondary-header":"Awesome","main-image":"/images/icon-question.png"}}

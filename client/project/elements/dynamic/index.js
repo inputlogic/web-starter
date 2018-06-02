@@ -3,20 +3,28 @@ import {dispatch, set} from '/store'
 import connect from '/util/connect'
 import apiUrl from '/util/apiUrl'
 import request from '/util/request'
+import cached from '/contentCache'
 
-const {promise} = baseRequest({url: apiUrl('content')})
-promise.then(res => {
-  dispatch(set(['requests', apiUrl('content'), 'result'], W.reduce(
+export const normalize = contentResponse =>
+  W.reduce(
     (acc, c) => ({
       ...acc,
       [c.page]: {[c.identifier]: c.value, ...(acc[c.page] || {})}
     }),
     {},
-    res.results
-  )))
+    contentResponse.results
+  )
+
+const {promise} = baseRequest({url: apiUrl('content')})
+promise.then(res => {
+  dispatch(set(
+    ['requests', apiUrl('content'), 'result'],
+    normalize(res)
+  ))
 })
 
-const cached = {}
+// const cached = {}
+console.log(cached)
 
 const sentDynamicValues = {}
 const postDynamicValue = (page, id, value) => {

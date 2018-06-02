@@ -6,6 +6,7 @@ import Helmet from 'preact-helmet'
 import routes from '/allRoutes'
 import {store} from '/store'
 import {MainApp} from '/index'
+import contentCache from './contentCache.js'
 
 const url = require('url')
 const http = require('http')
@@ -21,6 +22,8 @@ global.W = W
 const port = process.env.PORT || 5000
 const indexFile = './public/index.html'
 const notSupportedFile = './public/unsupported.html'
+
+contentCache()
 
 const requestsFinished = requests => {
   const remaining = W.reject(req => req.result != null, Object.values(requests))
