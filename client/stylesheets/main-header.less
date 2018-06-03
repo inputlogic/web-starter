@@ -1,0 +1,18 @@
+.main-header {
+  padding: 0.5em 1em;
+  background: #ccc;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+
+  a {
+    margin-right: 1em;
+
+    &:last-child {
+      margin-right: 0em;
+    }
+    &.active {
+      text-decoration: underline;
+    }
+  }
+}

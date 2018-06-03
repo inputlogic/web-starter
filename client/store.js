@@ -2,21 +2,38 @@ import {createStore} from 'redux'
 import {watchStore} from 'wasmuth'
 import {composeWithDevTools} from 'redux-devtools-extension'
 
-import {pathReducer, actions} from './util/pathReducer'
-import getStorageItem from './util/getStorageItem'
+import {pathReducer, actions} from '/util/pathReducer'
+import safeWindow from '/util/safeWindow'
 
 import {DEBUG} from '/settings'
 
+const keepStateOnLogout = ['loadedImages', 'route']
+
+const combine = reducers => (state, action) =>
+  reducers.reduce(
+    (newState, reducer) => reducer(newState, action),
+    state
+  )
+
 const initialState = {
-  token: getStorageItem('token'),
-  accountStatus: getStorageItem('accountStatus'),
+  // the line below breaks logout :/
+  // ...(typeof window !== 'undefined') ? window.__initialStore : {},
+  token: safeWindow('localStorage.getItem', 'token'),
+  accountStatus: safeWindow('localStorage.getItem', 'accountStatus'),
   dropdowns: {},
-  invalidatedRequests: {},
-  ...(typeof window !== 'undefined') ? window.__initialStore : {}
+  invalidatedRequests: {}
 }
 
+const reducers = [
+  (state, {type}) => type === 'LOGOUT' ? {
+    ...W.pick(keepStateOnLogout, state),
+    ...W.without(['token'], initialState)
+  } : state,
+  pathReducer
+]
+
 export const store = createStore(
-  pathReducer,
+  combine(reducers),
   initialState,
   DEBUG ? composeWithDevTools() : undefined
 )

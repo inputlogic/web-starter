@@ -3,8 +3,8 @@ import render from 'preact-render-to-string'
 
 import Helmet from 'preact-helmet'
 
-import routes from '/allRoutes'
 import {store} from '/store'
+import routes from '/allRoutes'
 import {MainApp} from '/index'
 import contentCache from './contentCache.js'
 

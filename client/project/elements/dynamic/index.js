@@ -1,8 +1,8 @@
 import {request as baseRequest} from 'wasmuth'
-import {dispatch, set} from '/store'
+import {dispatch, set, getState} from '/store'
 import connect from '/util/connect'
 import apiUrl from '/util/apiUrl'
-import request from '/util/request'
+import request, {getAuthHeader} from '/util/request'
 import cached from '/../public/contentCache'
 import Tooltip from '/project/elements/tooltip'
 
@@ -26,6 +26,9 @@ promise.then(res => {
 
 const sentDynamicValues = {}
 const postDynamicValue = (page, id, value) => {
+  if (!W.path(['requests', apiUrl('me'), 'result', 'isAdmin'], getState())) {
+    return
+  }
   if (W.path([page, id], sentDynamicValues)) {
     return
   }
@@ -37,6 +40,7 @@ const postDynamicValue = (page, id, value) => {
   const {promise} = request({
     url: apiUrl('content'),
     method: 'POST',
+    headers: getAuthHeader(),
     data: {page, identifier: id, value}
   })
   promise.then(res => { console.log('saved res') })
@@ -69,14 +73,14 @@ export const DynamicText = connect({
         <Tooltip
           className='inline'
           text={`${id} ${pageName}`}
-          pos='up'
+          pos='right'
         >
           {value}
         </Tooltip>
       </a>
     )
   }
-  return value
+  return Array.isArray(value) ? value[0] : value
 })
 
 export const Dynamic = connect({
@@ -110,7 +114,7 @@ export const Dynamic = connect({
         <Tooltip
           className='inline'
           text={`${id} ${pageName}`}
-          pos='up'
+          pos='right'
         >
           {func({value})}
         </Tooltip>
