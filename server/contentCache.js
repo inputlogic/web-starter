@@ -6,7 +6,7 @@ import fs from 'fs'
 export default () => {
   request(apiUrl('content'), (err, res, body) => {
     if (err) {
-      console.error(err)
+      log.error('Error getting content from api', err)
       return
     }
     const content = normalize(JSON.parse(body))
@@ -16,7 +16,7 @@ export default () => {
       'utf8',
       (err) => {
         if (err) {
-          console.error(err)
+          log.error('Error writing content file', err)
         }
       }
     )

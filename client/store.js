@@ -1,9 +1,8 @@
 import {createStore} from 'redux'
-import {watchStore} from 'wasmuth'
+import {watchStore, safeWindow} from 'wasmuth'
 import {composeWithDevTools} from 'redux-devtools-extension'
 
 import {pathReducer, actions} from '/util/pathReducer'
-import safeWindow from '/util/safeWindow'
 
 import {DEBUG} from '/settings'
 

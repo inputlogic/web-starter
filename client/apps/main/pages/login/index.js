@@ -4,7 +4,6 @@ import {urlFor} from '/util/route'
 import {showNotification} from '/project/elements/page-notification'
 import request from '/util/request'
 import apiUrl from '/util/apiUrl'
-import safeWindow from '/util/safeWindow'
 
 import Base from './base'
 
@@ -16,7 +15,7 @@ export const Login = () =>
         const {promise} = request({url: apiUrl('login'), method: 'POST', data})
         promise
           .then(({token, userId}) => {
-            safeWindow('localStorage.setItem', 'token', token)
+            W.safeWindow('localStorage.setItem', 'token', token)
             dispatch(set('token', token))
             route(urlFor('home'))
           })

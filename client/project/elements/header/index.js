@@ -1,7 +1,6 @@
 import {route} from 'preact-router'
 import {urlFor} from '/util/route'
 import {dispatch} from '/store'
-import safeWindow from '/util/safeWindow'
 import connect from '/util/connect'
 import apiUrl from '/util/apiUrl'
 import Base from './base'
@@ -14,7 +13,7 @@ export const Header = connect({
   isAuthenticated: !!me,
   onClickLogout: (ev) => {
     ev.preventDefault()
-    safeWindow('localStorage.removeItem', 'token')
+    W.safeWindow('localStorage.removeItem', 'token')
     dispatch({type: 'LOGOUT'})
     route(urlFor('login'))
   }
