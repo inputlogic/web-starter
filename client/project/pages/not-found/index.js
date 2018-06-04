@@ -1,4 +1,4 @@
-import {withState} from '/store'
+import withState from '/util/withState'
 import Base from './base'
 
 export const NotFound = withState(

@@ -8,7 +8,8 @@ export const routes = {
   },
   users: {
     path: '/users',
-    component: Users
+    component: Users,
+    isAuthed: () => false
   }
 }
 

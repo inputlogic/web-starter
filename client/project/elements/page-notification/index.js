@@ -1,5 +1,6 @@
 import {guid, path} from 'wasmuth'
-import {withState, dispatch, set, update, getState} from '/store'
+import withState from '/util/withState'
+import {dispatch, set, update, getState} from '/store'
 import Base from './base'
 
 export const PageNotification = withState(

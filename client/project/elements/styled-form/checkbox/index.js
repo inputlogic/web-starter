@@ -1,4 +1,5 @@
-import {withState, dispatch, update} from '/store'
+import withState from '/util/withState'
+import {dispatch, update} from '/store'
 
 export const Checkbox = withState('Checkbox',
   ({forms = {}}, {formName, name}) => ({
