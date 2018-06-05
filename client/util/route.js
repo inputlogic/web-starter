@@ -14,6 +14,7 @@ import {
 import PreactRouter from 'preact-router'
 
 import {compose, setNodeName} from '/util/compose'
+import log from '/util/logger'
 
 import {set, dispatch, getState} from '/store'
 import routes from '/allRoutes'
@@ -94,7 +95,7 @@ export const Router = pipe(
     <PreactRouter url={url}>
       {map((name) =>
         <Route name={name} key={`route-${name}`} {...routes[name]} />
-      , keys)}
+        , keys)}
     </PreactRouter>
 )
 
