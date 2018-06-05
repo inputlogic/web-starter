@@ -15,8 +15,6 @@ const combine = reducers => (state, action) =>
   )
 
 const initialState = {
-  // the line below breaks logout :/
-  // ...(typeof window !== 'undefined') ? window.__initialStore : {},
   token: safeWindow('localStorage.getItem', 'token'),
   accountStatus: safeWindow('localStorage.getItem', 'accountStatus'),
   dropdowns: {},
@@ -33,7 +31,7 @@ const reducers = [
 
 export const store = createStore(
   combine(reducers),
-  initialState,
+  {...initialState, ...(typeof window !== 'undefined') ? window.__initialStore : {}},
   DEBUG ? composeWithDevTools() : undefined
 )
 export const dispatch = store.dispatch

@@ -3,6 +3,7 @@ import render from 'preact-render-to-string'
 
 import Helmet from 'preact-helmet'
 
+import logger from '/util/logger'
 import {store} from '/store'
 import routes from '/allRoutes'
 import {MainApp} from '/index'
@@ -18,6 +19,7 @@ const queryString = require('querystringify')
 const uaParser = require('ua-parser-js')
 
 global.W = W
+global.log = logger
 
 const port = process.env.PORT || 5000
 const indexFile = './public/index.html'
