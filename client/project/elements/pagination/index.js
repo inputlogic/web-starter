@@ -1,10 +1,10 @@
 import {path} from 'wasmuth'
 import {route as preactRoute} from 'preact-router'
 
+import withState from '/util/withState'
 import {urlFor} from '/util/route'
 import {updateQuery} from '/util/updateQuery'
 
-import {withState} from '/store'
 import {PAGE_SIZE} from '/settings'
 
 import Base from './base'

@@ -2,9 +2,8 @@ import {createStore} from 'redux'
 import {watchStore} from 'wasmuth'
 import {composeWithDevTools} from 'redux-devtools-extension'
 
-import {pathReducer, actions} from '/util/pathReducer'
-import withStateUtil from '/util/withState'
-import getStorageItem from '/util/getStorageItem'
+import {pathReducer, actions} from './util/pathReducer'
+import getStorageItem from './util/getStorageItem'
 
 import {DEBUG} from '/settings'
 
@@ -28,5 +27,4 @@ export const set = actions.set
 export const update = actions.update
 export const remove = actions.remove
 export const watchPath = watchStore(store)
-export const withState = withStateUtil
 export default store

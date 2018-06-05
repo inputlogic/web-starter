@@ -1,4 +1,4 @@
-import {withState} from '/store'
+import withState from '/util/withState'
 import Example from './example'
 
 const MODALS = {

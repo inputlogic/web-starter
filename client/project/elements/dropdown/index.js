@@ -1,10 +1,11 @@
 import {pathOr, pipe, filter} from 'wasmuth'
 
+import withState from '/util/withState'
+
 import {
   set,
   dispatch,
-  getState,
-  withState
+  getState
 } from '/store'
 
 import BaseDropdown from './base'
