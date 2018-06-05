@@ -9,17 +9,21 @@ export const Checkbox = ({
   formName,
   label,
   children,
+  value,
   className = 'checkbox',
   ...props
 }) => {
   const id = `${formName}-${name}`
+  console.log(children)
   return Base({
     label,
     id,
     InputComponent: Input,
+    children,
     input: {
       type: 'checkbox',
       name,
+      value,
       formName
     }
   })

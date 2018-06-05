@@ -1,4 +1,4 @@
-export const Base = ({input, InputComponent, id, label, children}) =>
+export const Base = ({input, InputComponent, id, label, children}) => console.log(children) ||
   <div>
     <InputComponent id={id} {...input} />
     <label for={id}>
