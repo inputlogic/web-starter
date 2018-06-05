@@ -1,46 +1,33 @@
-import {TextArea, Select, SubmitButton, Input, Form, Field} from '/project/elements/form'
+import {TextArea, Select, SubmitButton, Input, Form} from '/project/elements/form'
+import {Checkbox} from '/project/elements/styled-form/checkbox'
+import {Field} from '/project/elements/styled-form/field'
 
 const TextField = ({label, hint, ...props}) =>
   <Field fancy label={label} hint={hint} >
     <Input {...props} />
   </Field>
 
-const Checkbox = ({label, hint, ...props}) =>
-  <Field label={label} hint={hint} >
-    <Input type='checkbox' {...props} />
-  </Field>
-
 export const ExampleForm = ({formProps}) =>
   <div>
     <Form {...formProps}>
-      <TextField name='name' />
+      <TextField className='textinput' name='name' />
       <Field fancy>
-        <Input name='name2' trackOnInput trackFocus />
+        <Input className='textinput' name='name2' trackOnInput trackFocus />
       </Field>
-      <Field fancy >
-        <Input name='email' type='email' />
-      </Field>
-      <Field fancy>
-        <Input name='password' type='password' />
-      </Field>
-      <Field fancy>
-        <Input name='confirmPassword' type='password' />
-      </Field>
-      <Checkbox name='checkbox' value='c1' />
-      <Field>
-        <Input name='checkbox' type='checkbox' value='c2' />
-      </Field>
-      <Field>
+      <Checkbox name='checkbox' value='c1'>checkbox</Checkbox>
+      <div>
         <Input name='radio' type='radio' value='r1' />
-      </Field>
-      <Field>
+        <label for='example-radio-r1' >radio 1</label>
+      </div>
+      <div>
         <Input name='radio' type='radio' value='r2' />
-      </Field>
+        <label for='example-radio-r2' >radio 2</label>
+      </div>
       <Field>
         <Input name='date' type='date' />
       </Field>
       <Field fancy>
-        <Input name='number' type='number' />
+        <Input className='textinput' name='number' type='number' />
       </Field>
       <Field>
         <Select name='options' >
@@ -49,9 +36,9 @@ export const ExampleForm = ({formProps}) =>
         </Select>
       </Field>
       <Field>
-        <TextArea name='textarea' trackOnInput trackFocus />
+        <TextArea className='textinput' name='textarea' trackOnInput trackFocus />
       </Field>
-      <SubmitButton>submit</SubmitButton>
+      <SubmitButton className='btn' >submit</SubmitButton>
     </Form>
   </div>
 

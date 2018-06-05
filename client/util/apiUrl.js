@@ -11,7 +11,11 @@ import {API_URL, PAGE_SIZE} from '/settings'
  *   post: 'posts/:id'
  */
 const API_PATHS = {
-
+  content: 'content/',
+  contentsAdmin: 'admin/content/content',
+  contentAdmin: 'admin/content/content/:id',
+  me: 'me',
+  login: 'auth/login'
 }
 
 export default (name, {args = {}, queries = {}, page} = {}) => {
@@ -29,8 +33,7 @@ export default (name, {args = {}, queries = {}, page} = {}) => {
   const pageSize = queries.limit || PAGE_SIZE
   const newQueries = {
     ...queries,
-    limit: pageSize,
-    ...!!page && {offset: (page - 1) * pageSize}
+    ...!!page && {offset: (page - 1) * pageSize, limit: pageSize}
   }
 
   return `${API_URL}/${pathWithArgs}?${queryString.stringify(newQueries)}`

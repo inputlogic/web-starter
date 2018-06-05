@@ -79,8 +79,7 @@ h6.label {
   margin-bottom: 1em;
 }
 
-input,
-textarea {
+.textinput {
   width: 100%;
   padding: .75em 1.125em;
   border: none;
@@ -262,7 +261,6 @@ input.fancy-label + label {
   font-weight: normal;
   font-size: 14px;
   letter-spacing: unset;
-  color: @lighter-grey;
   margin: 0;
 }
 
@@ -311,14 +309,12 @@ input.fancy-label + label {
 
 @radio-size: 1em;
 
-[type="radio"]:not(:checked),
-[type="radio"]:checked {
+.radio {
   position: absolute;
   left: -9999px;
 }
 
-[type="radio"]:not(:checked) + label,
-[type="radio"]:checked + label {
+.radio + label {
   position: relative;
   padding-left: @radio-size * 1.4;
   padding-top: 0;
@@ -340,20 +336,21 @@ input.fancy-label + label {
   }
 }
 
-[type="radio"] + label::before {
+.radio + label::before {
   content: '';
   position: absolute;
   left: 0;
   top: 5px;
   width: @radio-size;
   height: @radio-size;
-  background-image: url(../images/controls/radio-small.svg);
+  // background-image: url(../images/controls/radio-small.svg);
+  background-color: red;
 }
 
-[type="radio"]:not(:checked) + label::after,
-[type="radio"]:checked + label::after {
+.radio + label::after {
   content: '';
-  background-image: url(../images/controls/radio-small-tan.svg);
+  // background-image: url(../images/controls/radio-small-tan.svg);
+  background-color: blue;
   background-repeat: no-repeat;
   background-size: 100% 100%;
   position: absolute;

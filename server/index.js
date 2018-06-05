@@ -3,9 +3,11 @@ import render from 'preact-render-to-string'
 
 import Helmet from 'preact-helmet'
 
-import routes from '/allRoutes'
+import logger from '/util/logger'
 import {store} from '/store'
+import routes from '/allRoutes'
 import {MainApp} from '/index'
+import contentCache from './contentCache.js'
 
 const url = require('url')
 const http = require('http')
@@ -17,10 +19,13 @@ const queryString = require('querystringify')
 const uaParser = require('ua-parser-js')
 
 global.W = W
+global.log = logger
 
 const port = process.env.PORT || 5000
 const indexFile = './public/index.html'
 const notSupportedFile = './public/unsupported.html'
+
+contentCache()
 
 const requestsFinished = requests => {
   const remaining = W.reject(req => req.result != null, Object.values(requests))
@@ -77,7 +82,7 @@ const renderFile = file => (data, response) =>
     response.end(ejs.render(content, {
       prerender: '',
       prerenderHead: data.prerenderHead || '<title>Web-Starter</title>',
-      state: {},
+      state: '{}',
       ...data
     }), 'utf-8')
   })

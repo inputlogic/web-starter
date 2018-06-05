@@ -9,6 +9,7 @@ import {urlFor} from './route'
 import updateQuery from './updateQuery'
 import uploadFile from './uploadFile'
 import withRequest from './withRequest'
+import withRequests from './withRequests'
 import withState from './withState'
 
 export default {
@@ -23,5 +24,6 @@ export default {
   updateQuery,
   uploadFile,
   withRequest,
+  withRequests,
   withState
 }

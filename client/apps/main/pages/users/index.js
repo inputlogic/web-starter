@@ -2,7 +2,7 @@ import connect from '/util/connect'
 import Base from './base'
 
 export default connect({
-  withRequest: state => ({
+  withRequests: state => ({
     user: {
       url: 'https://jsonplaceholder.typicode.com/users/1'
     }

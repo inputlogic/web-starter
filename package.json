@@ -6,7 +6,7 @@
   "version": "0.1.0",
   "repository": "",
   "scripts": {
-    "preinstall": "if test \"$NODE_ENV\" = \"production\"; then rm -rf public; mkdir public; fi",
+    "preinstall": "if test \"$NODE_ENV\" = \"production\"; then rm -rf public; fi; mkdir -p public; touch public/contentCache.js;",
     "postinstall": "if test \"$NODE_ENV\" = \"production\"; then npm run build; fi",
     "start": "if test \"$NODE_ENV\" = \"production\"; then npm run serve; else npm run dev; fi",
     "dev": "run-p watch serve",

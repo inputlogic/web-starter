@@ -1,39 +1,57 @@
+import {route} from 'preact-router'
 import withState from '/util/withState'
-import {dispatch, update} from '/store'
+import updateQuery from '/util/updateQuery'
+import {Input} from '/project/elements/form'
+import Base from './base'
 
-export const Checkbox = withState('Checkbox',
-  ({forms = {}}, {formName, name}) => ({
-    checked: W.pathOr(false, [formName, name], forms)
-  })
-)(({
+export const Checkbox = ({
   name,
   formName,
-  checked,
   label,
   children,
+  value,
   className = 'checkbox',
   ...props
 }) => {
-  const input = (
-    <input
-      className={className}
-      type='checkbox'
-      id={name}
-      name={name}
-      checked={checked}
-      onChange={ev =>
-        ev.preventDefault() ||
-        dispatch(update(['forms', formName], {[name]: ev.target.checked}))
+  const id = `${formName}-${name}`
+  console.log(children)
+  return Base({
+    label,
+    id,
+    InputComponent: Input,
+    children,
+    input: {
+      type: 'checkbox',
+      name,
+      value,
+      formName
+    }
+  })
+}
+
+export const QueryCheckbox = withState(
+  (state, {name}) => ({
+    checked: W.path(`route.args.${name}`, state) === 'true'
+  })
+)(({label, name, checked, children, className = 'checkbox'}) => {
+  const id = `query-checkbox-${name}`
+  return Base({
+    label,
+    id,
+    children,
+    InputComponent: props => <input {...props} />,
+    input: {
+      type: 'checkbox',
+      name,
+      checked,
+      className,
+      onChange: ev => {
+        ev.preventDefault()
+        console.log('hi', checked)
+        route(updateQuery({[name]: checked ? 'false' : 'true'}))
       }
-    />
-  )
-  return <div>
-    {input}
-    <label for={name}>
-      {label != null ? label : '\u00A0'}
-      {children}
-    </label>
-  </div>
+    }
+  })
 })
 
 export default Checkbox

@@ -4,7 +4,7 @@ import parseResults from '/util/parseResults'
 import BaseListResource from './base'
 
 export default connect({
-  withRequest: (state, props) => ({
+  withRequests: (state, props) => ({
     query: {
       url: props.url,
       parse: parseResults

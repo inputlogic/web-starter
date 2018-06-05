@@ -9,9 +9,8 @@ import root from '/util/root'
 export const invalidate = url =>
   dispatch(update(['invalidatedRequests'], {[url]: true}))
 
-export const withRequest = mapper => Component => compose({
+export const withRequests = mapper => Component => compose({
   init () {
-    console.warn('withRequest will be deprecated. Use withRequests instead.')
     const requests = mapper(getState(), this.props)
     if (requests) {
       const newProps = requestResults(requests)
@@ -60,7 +59,7 @@ export const withRequest = mapper => Component => compose({
   }
 })
 
-export default withRequest
+export default withRequests
 
 const performRequests = requests => new Promise((resolve, reject) => {
   const requestKeys = Object.keys(requests)
