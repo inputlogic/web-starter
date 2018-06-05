@@ -3,8 +3,8 @@ import {dispatch, set, getState} from '/store'
 import connect from '/util/connect'
 import apiUrl from '/util/apiUrl'
 import request, {getAuthHeader} from '/util/request'
-import cached from '/../public/contentCache'
 import Tooltip from '/project/elements/tooltip'
+import cached from '/../public/contentCache'
 
 export const normalize = contentResponse =>
   W.reduce(
@@ -57,7 +57,7 @@ export const DynamicText = connect({
   }
 })(({content, id, children, pageName, editMode}) => {
   const page = (content || {})[pageName]
-  const value = W.path([id, 'value'], page || {}) || W.path([pageName, id, 'value'], cached) || children
+  const value = W.path([id, 'value'], page || {}) || W.path([pageName, id, 'value'], cached || {}) || children
   if (content && (!page || !page[id])) {
     postDynamicValue(pageName, id, children[0])
   }
@@ -98,7 +98,7 @@ export const Dynamic = connect({
     console.warn('Dynamic expects a function as the only child.')
   }
   const page = (content || {})[pageName]
-  const value = W.path([id, 'value'], page || {}) || W.path([pageName, id, 'value'], cached) || children
+  const value = W.path([id, 'value'], page || {}) || W.path([pageName, id, 'value'], cached || {}) || children
   if (content && (!page || !page[id])) {
     postDynamicValue(pageName, id, initial)
   }

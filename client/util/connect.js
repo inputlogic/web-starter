@@ -1,6 +1,6 @@
 import {pipe} from 'wasmuth'
 import withStateFn from '/util/withState'
-import withRequestFn from '/util/withRequest'
+import withRequestFn from '/util/withRequests'
 
 // TODO: deprecate withRequest
 export const connect = ({withState, withRequest, withRequests}) => {

@@ -11,6 +11,7 @@ export const invalidate = url =>
 
 export const withRequest = mapper => Component => compose({
   init () {
+    console.warn('withRequest will be deprecated. Use withRequests instead.')
     const requests = mapper(getState(), this.props)
     if (requests) {
       const newProps = requestResults(requests)

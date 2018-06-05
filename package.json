@@ -6,15 +6,14 @@
   "version": "0.1.0",
   "repository": "",
   "scripts": {
-    "preinstall": "if test \"$NODE_ENV\" = \"production\"; then rm -rf public; mkdir public; fi",
+    "preinstall": "if test \"$NODE_ENV\" = \"production\"; then rm -rf public; fi; mkdir -p public; touch public/contentCache.js;",
     "postinstall": "if test \"$NODE_ENV\" = \"production\"; then npm run build; fi",
-    "start": "npm run contentCache; if test \"$NODE_ENV\" = \"production\"; then npm run serve; else npm run dev; fi",
+    "start": "if test \"$NODE_ENV\" = \"production\"; then npm run serve; else npm run dev; fi",
     "dev": "run-p watch serve",
     "serve": "babel-node server",
     "watch": "brunch watch",
     "build": "brunch build --production",
     "test": "npm run std",
-    "contentCache": "touch public/contentCache.js",
     "std": "standard --verbose | snazzy"
   },
   "dependencies": {
