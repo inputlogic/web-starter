@@ -3,6 +3,11 @@ import getStorageItem from '/util/getStorageItem'
 import {dispatch, set, getState} from '/store'
 import {DEBUG} from '/settings'
 
+export const getAuthHeader = () => {
+  const authToken = getStorageItem('token')
+  return authToken ? {Authorization: `Token ${authToken}`} : {}
+}
+
 /**
  * Stateful Request:
  * Make http request and keep it in the state.
@@ -23,7 +28,7 @@ export default (args, options = {}) => {
         if (DEBUG) {
           console.warn('Using cached result for: ', identifier)
         }
-        return Promise.resolve({xhr: {}})
+        return {promise: Promise.resolve(existing), fromCache: true}
       }
     }
   }
@@ -51,9 +56,4 @@ export default (args, options = {}) => {
   })
 
   return {promise: newPromise, xhr}
-}
-
-export const getAuthHeader = () => {
-  const authToken = getStorageItem('token')
-  return authToken ? {Authorization: `Token ${authToken}`} : {}
 }

@@ -51,7 +51,7 @@
     "standard": "^10.0.3"
   },
   "engines": {
-    "node": "8.9.x"
+    "node": "8.11.x"
   },
   "standard": {
     "globals": [
