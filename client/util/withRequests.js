@@ -191,7 +191,7 @@ const singularRequest = (() => {
         {url, headers: getAuthHeader()},
         {maxAge: 5000}
       )
-      xhr = req.xhr
+      xhr = req.fromCache ? existing.xhr : req.xhr
       requests[url] = {
         xhr,
         count: ((existing || {}).count || 0) + (keepCount ? 1 : 0)
