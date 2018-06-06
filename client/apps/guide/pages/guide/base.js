@@ -30,7 +30,7 @@ export default ({openExampleModal}) =>
 
     <GuideSection name='Tooltips'>
       <div className='demo-grid'>
-        <Tooltip className='inline' text='I am up' pos='up'>
+        <Tooltip className='inline' text='I am up' up>
           <img src='/images/icon-question.png' alt='' />
         </Tooltip>
 
@@ -38,7 +38,7 @@ export default ({openExampleModal}) =>
           <img src='/images/icon-question.png' alt='' />
         </Tooltip>
 
-        <Tooltip className='inline' text='I am left' pos='left'>
+        <Tooltip className='inline' text='I am left' left>
           <img src='/images/icon-question.png' alt='' />
         </Tooltip>
 
@@ -46,7 +46,7 @@ export default ({openExampleModal}) =>
           <img src='/images/icon-question.png' alt='' />
         </Tooltip>
 
-        <Tooltip className='inline' text='Small' pos='up' length='small'>
+        <Tooltip className='inline' text='Small' up length='small'>
           <img src='/images/icon-question.png' alt='' />
         </Tooltip>
 
