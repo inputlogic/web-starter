@@ -1,5 +1,6 @@
 import Home from './pages/home'
 import Users from './pages/users'
+import User from './pages/user'
 import Login from './pages/login'
 
 export const routes = {
@@ -9,8 +10,11 @@ export const routes = {
   },
   users: {
     path: '/users',
-    component: Users,
-    isAuthed: () => false
+    component: Users
+  },
+  user: {
+    path: '/users/:id',
+    component: User
   },
   login: {
     path: '/login',
