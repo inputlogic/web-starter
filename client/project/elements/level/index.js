@@ -1,3 +1,7 @@
+import check from 'check-arg-types'
+
+const toType = check.prototype.toType
+
 const classMap = {
   noPadding: 'no-padding',
   halfPadding: 'half-padding',
@@ -35,10 +39,10 @@ const Level = ({
     {!children.length &&
       <div class={cls({noPadding, halfPadding})}>
         <div class='level-left'>
-          {left(props)}
+          {toType(left) === 'function' ? left(props) : left}
         </div>
         <div class='level-right'>
-          {right(props)}
+          {toType(right) === 'function' ? right(props) : right}
         </div>
       </div>}
   </div>
