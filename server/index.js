@@ -1,13 +1,15 @@
 import W from 'wasmuth'
-import render from 'preact-render-to-string'
 
+import render from 'preact-render-to-string'
 import Helmet from 'preact-helmet'
 
 import logger from '/util/logger'
 import {store} from '/store'
 import routes from '/allRoutes'
 import {MainApp} from '/index'
+
 import contentCache from './contentCache.js'
+import matchingRoute from './matchingRoute.js'
 
 const url = require('url')
 const http = require('http')
@@ -34,21 +36,21 @@ const requestsFinished = requests => {
 
 const renderReact = (parsed, request) => new Promise((resolve, reject) => {
   const routePairs = W.pipe(W.toPairs, W.map(W.last))(routes)
-  const match = W.find(W.where('path', request.url), routePairs)
-  const updateParsed = (html) => {
-    parsed.prerender = html
-    const head = Helmet.rewind()
-    parsed.prerenderHead = `
-      ${head.title.toString()}
-      ${head.meta.toString()}
-      ${head.link.toString()}
-    `
-    parsed.state = JSON.stringify(store.getState())
-  }
+  const match = W.find(route => matchingRoute(request.url, route.path), routePairs)
 
   if (match === undefined) {
     resolve(parsed)
   } else {
+    const updateParsed = (html) => {
+      parsed.prerender = html
+      const head = Helmet.rewind()
+      parsed.prerenderHead = `
+        ${head.title.toString()}
+        ${head.meta.toString()}
+        ${head.link.toString()}
+      `
+      parsed.state = JSON.stringify(store.getState())
+    }
     const html = render(<MainApp url={request.url} />)
     const requests = W.pathOr({}, 'requests', store.getState())
     if (Object.keys(requests).length) {
