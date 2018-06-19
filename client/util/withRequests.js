@@ -46,6 +46,7 @@ export const withRequests = mapper => Component => compose({
     this.unsubscribe = subscribe(syncState)
   },
   componentWillUnmount () {
+    console.log('componentWillUnmount', this.props)
     this.unsubscribe()
     abortRequests(this._aborts || [])
     abortPolls(this._polls || [])
@@ -191,7 +192,7 @@ const singularRequest = (() => {
         {url, headers: getAuthHeader()},
         {maxAge: 5000}
       )
-      xhr = req.fromCache ? existing.xhr : req.xhr
+      xhr = req.xhr
       requests[url] = {
         xhr,
         count: ((existing || {}).count || 0) + (keepCount ? 1 : 0)

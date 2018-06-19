@@ -5,6 +5,7 @@ import Base from './base'
 export default connect({
   withRequests: state => {
     const id = getRouteIdFromState(state)
+    console.log('id', id)
     return {
       ...!!id && {
         user: {
