@@ -28,7 +28,7 @@ export default (args, options = {}) => {
         if (DEBUG) {
           console.warn('Using cached result for: ', identifier)
         }
-        return {promise: Promise.resolve(existing), fromCache: true}
+        return {promise: Promise.resolve(existing), fromCache: true, xhr: {readyState: 4, abort: () => {}}}
       }
     }
   }

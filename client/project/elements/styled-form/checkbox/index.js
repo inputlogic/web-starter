@@ -14,7 +14,6 @@ export const Checkbox = ({
   ...props
 }) => {
   const id = `${formName}-${name}`
-  console.log(children)
   return Base({
     label,
     id,
@@ -47,7 +46,6 @@ export const QueryCheckbox = withState(
       className,
       onChange: ev => {
         ev.preventDefault()
-        console.log('hi', checked)
         route(updateQuery({[name]: checked ? 'false' : 'true'}))
       }
     }
