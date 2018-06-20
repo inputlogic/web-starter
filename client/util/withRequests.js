@@ -11,12 +11,17 @@ export const invalidate = url =>
 
 export const withRequests = mapper => Component => compose({
   init () {
+    this._routeName = W.path('route.name', getState())
     const requests = mapper(getState(), this.props)
     if (requests) {
       const newProps = requestResults(requests)
       this.state = {_namespacedState: newProps, _firstSync: false}
     }
     const syncState = () => {
+      if (!this.props.ignoreRouteChanges &&
+        this._routeName !== W.path('route.name', getState())) {
+        return
+      }
       const requests = mapper(getState(), this.props)
       const changedRequests = this._requests
         ? diff(this._requests, requests, getState().invalidatedRequests)
@@ -46,7 +51,6 @@ export const withRequests = mapper => Component => compose({
     this.unsubscribe = subscribe(syncState)
   },
   componentWillUnmount () {
-    console.log('componentWillUnmount', this.props)
     this.unsubscribe()
     abortRequests(this._aborts || [])
     abortPolls(this._polls || [])

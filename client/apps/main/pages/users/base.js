@@ -12,7 +12,7 @@ export const Users = ({url}) =>
       ]}
     />
     <h1>Users</h1>
-    <ListResource url={url}>
+    <ListResource url={url} ignoreRouteChanges>
       {({id, name, email}) =>
         <div>
           <h2><a href={urlFor('user', {args: {id}})}>{name}</a></h2>
